@@ -1,6 +1,6 @@
 ## Expense Tracker Backend
 
-## Description
+## Descriptionss
 
 "Expense tracker backend" is a backend service where any individual can join into the system and very easily with minimum effort can manage, monitor his day to life expenses.
 
