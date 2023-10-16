@@ -1,0 +1,243 @@
+swagger: "2.0"
+
+info:
+  title: Expense Tracker API
+  description: Expense tracker is aaaa service where an institute, organization, company etc. can join and then
+    add their employees into the system and very easily with minimum effort can manage their
+    employees leave management system.
+  version: 1.0.0
+
+schemes:
+  - http
+  - https
+
+produces:
+  - application/json
+
+consumes:
+  - application/json
+
+basePath: "/api"
+
+securityDefinitions:
+  client_key:
+    type: apiKey
+    name: X-Client-key
+    in: header
+
+  api_token:
+    type: apiKey
+    name: Authorization
+    in: header
+
+tags:
+  - name: User
+    description: API's for user module.
+
+  - name: OfficeType
+    description: API's for office type module.
+
+  - name: Office
+    description: API's for office module.
+
+      #############################################################################################################
+    # User #
+#############################################################################################################
+paths:
+  /user/login:
+    post:
+      summary: User login
+      description: |
+        User log into the system with email & password
+      tags:
+        - User
+      consumes:
+        - application/json
+      security:
+      # - client_key: []
+      # - api_token: []
+      parameters:
+        - name: item
+          in: body
+          required: true
+          description: |
+            Set reqest parameter to log into the system
+          schema:
+            $ref: "#/definitions/LoginObject"
+      responses:
+        "200":
+          description: |
+            Response after successful log into the system
+          schema:
+            $ref: "#/definitions/LoginResponse"
+
+
+              #############################################################################################################
+            # Office Type #
+  #############################################################################################################
+  /office-type/create:
+    post:
+      summary: Office type creation
+      description: |
+        Office type creation by admin
+      tags:
+        - OfficeType
+      consumes:
+        - application/json
+      security:
+        - api_token: []
+      parameters:
+        - name: item
+          in: body
+          required: true
+          description: |
+            Set reqest parameter to create office type
+          schema:
+            $ref: "#/definitions/OfficeTypeObject"
+      responses:
+        "200":
+          description: |
+            Response after successful creation of office type
+          schema:
+            $ref: "#/definitions/Success"
+
+  /office-type/{officeTypeId}:
+    get:
+      summary: Get office type by id
+      description: |
+        Get a specific office type by it's office type id
+      tags:
+        - OfficeType
+      consumes:
+        - application/json
+      security:
+        - api_token: []
+      parameters:
+        - name: officeTypeId
+          in: path
+          required: true
+          type: string
+          description: |
+            Set path value to office type
+      responses:
+        "200":
+          description: |
+            Response after getting office type by office type id
+          schema:
+            $ref: "#/definitions/officeTypeResObject"
+
+
+              #############################################################################################################
+            # Office #
+  #############################################################################################################
+  /office/registration:
+    post:
+      summary: User login
+      description: |
+        User log into the system with email & password
+      tags:
+        - Office
+      consumes:
+        - application/json
+      security:
+      # - client_key: []
+      # - api_token: []
+      parameters:
+        - name: item
+          in: body
+          required: true
+          description: |
+            Set reqest parameter to log into the system
+          schema:
+            $ref: "#/definitions/LoginObject"
+      responses:
+        "200":
+          description: |
+            Response after successful log into the system
+          schema:
+            $ref: "#/definitions/LoginResponse"
+
+
+              ##############################################################################################################                                                                                                         #
+            # Definitions #                                                                                                                                                                                                      #
+##############################################################################################################
+definitions:
+  Success:
+    type: object
+    description: |
+      Success
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+
+  LoginObject:
+    type: object
+    description: |
+      Login Object
+    required:
+      - email
+      - password
+      - isRemember
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      isRemember:
+        type: boolean
+        default: false
+
+  LoginResponse:
+    type: object
+    description: |
+      Login Response
+    properties:
+      id:
+        type: string
+      firstName:
+        type: string
+      email:
+        type: string
+      isRemember:
+        type: boolean
+      token:
+        type: string
+      tokenExpiresAt:
+        type: string
+      userType:
+        type: string
+
+  OfficeTypeObject:
+    type: object
+    description: |
+      Office Type
+    required:
+      - officeType
+      - description
+    properties:
+      officeType:
+        type: string
+      description:
+        type: string
+
+  officeTypeResObject:
+    type: object
+    description: |
+      Office type response object
+    properties:
+      id:
+        type: string
+      officeType:
+        type: string
+      description:
+        type: string
+      isActive:
+        type: boolean
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
