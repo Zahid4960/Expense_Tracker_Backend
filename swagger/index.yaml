@@ -1,0 +1,175 @@
+swagger: "2.0"
+
+info:
+  title: Expense Tracker API
+  description: Expense tracker backend is a backend service where any individual can join into the system and very easily with minimum effort can manage, monitor his day to life expenses.
+
+  version: 1.0.0
+
+schemes:
+  - http
+  - https
+
+produces:
+  - application/json
+
+consumes:
+  - application/json
+
+basePath: "/api"
+
+securityDefinitions:
+  client_key:
+    type: apiKey
+    name: X-Client-key
+    in: header
+
+  api_token:
+    type: apiKey
+    name: Authorization
+    in: header
+
+tags:
+  - name: User
+    description: API's for user module.
+
+#############################################################################################################
+#                                      # User #
+#############################################################################################################
+paths:
+  /:
+    get:
+      summary: Expense tracker test API
+      description: |
+        Test API for expense tracker
+      tags:
+        - User
+      consumes:
+        - application/json
+      responses:
+        "200":
+          description: |
+            Response after successful api call into the system
+          schema:
+            $ref: "#/definitions/Success"
+
+  /user/registration:
+    post:
+      summary: User registration
+      description: |
+        User registration into the system with email & password
+      tags:
+        - User
+      consumes:
+        - application/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          description: |
+            Set reqest parameter to registration into the system
+          schema:
+            $ref: "#/definitions/RegistrationObject"
+      responses:
+        "200":
+          description: |
+            Response after successful registration into the system
+          schema:
+            $ref: "#/definitions/Success"
+
+  /user/login:
+    post:
+      summary: User login
+      description: |
+        User log into the system with email & password
+      tags:
+        - User
+      consumes:
+        - application/json
+      security:
+      # - client_key: []
+      # - api_token: []
+      parameters:
+        - name: item
+          in: body
+          required: true
+          description: |
+            Set reqest parameter to log into the system
+          schema:
+            $ref: "#/definitions/LoginObject"
+      responses:
+        "200":
+          description: |
+            Response after successful log into the system
+          schema:
+            $ref: "#/definitions/LoginResponse"
+
+
+##############################################################################################################                                                                                                         #
+#                                     # Definitions #                                                                                                                                                                                                      #
+##############################################################################################################
+definitions:
+  Success:
+    type: object
+    description: |
+      Success
+    properties:
+      statusCode:
+        type: integer
+        default: 200
+      status:
+        type: string
+        default: success
+      message:
+        type: string
+        default: Success message
+
+  RegistrationObject:
+    type: object
+    description: |
+      Login Object
+    required:
+      - email
+      - password
+    properties:
+      email:
+        type: string
+        default: example@example.com
+      password:
+        type: string
+        default: password
+
+  LoginObject:
+    type: object
+    description: |
+      Login Object
+    required:
+      - email
+      - password
+      - isRemember
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      isRemember:
+        type: boolean
+        default: false
+
+  LoginResponse:
+    type: object
+    description: |
+      Login Response
+    properties:
+      id:
+        type: string
+      firstName:
+        type: string
+      email:
+        type: string
+      isRemember:
+        type: boolean
+      token:
+        type: string
+      tokenExpiresAt:
+        type: string

@@ -1,11 +1,10 @@
 const express = require('express')
 const router = express.Router()
+const authController = require('../../controller/auth.controller')
 
 
 const prefix = 'user'
-
-router.get(`/${prefix}/login`, (req, res) => {
-    res.status(200).json({ message: 'Hello from login page!' })
-})
+router.post(`/${prefix}/registration`, authController.registration)
+router.post(`/${prefix}/login`, authController.login)
 
 module.exports = router
