@@ -11,7 +11,8 @@ const port = process.env.PORT
 const apiRoute = require('./router/api/api.router')
 
 const { dbConnection } = require('./config/db.config')
-const { successResponse, errorResponse, exceptionResponse} = require('./helper/response.helper')
+const { SuccessResponse, ErrorResponse } = require('./utility/response')
+const { responseFormatter } = require('./utility/response-formatter')
 
 const app = express()
 
@@ -27,13 +28,13 @@ const swaggerDocument = jsYaml.load(fs.readFileSync(path.join(__dirname, './swag
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/', (req, res) => {
-    successResponse(res, 200, 'Hello from expense tracker', [])
+    responseFormatter(res, new SuccessResponse(200, 'Hello from expense tracker', []))
 })
 
 app.use('/api', apiRoute)
 
-app.all('*', (req, res, next ) => {
-    errorResponse(res, 404, 'Url not found!')
+app.all('*', (req, res) => {
+    responseFormatter(res, new ErrorResponse(404, 'Url not found!'))
 })
 
 app.listen(port, () => {
