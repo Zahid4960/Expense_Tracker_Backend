@@ -27,8 +27,8 @@ const swaggerDocument = jsYaml.load(fs.readFileSync(path.join(__dirname, './swag
 // Swagger setup
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.get('/', (req, res) => {
-    responseFormatter(res, new SuccessResponse(200, 'Hello from expense tracker', []))
+app.get('/api', (req, res) => {
+    responseFormatter(res, new SuccessResponse(200, 'Hello from expense tracker'))
 })
 
 app.use('/api', apiRoute)

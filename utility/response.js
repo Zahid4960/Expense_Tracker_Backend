@@ -17,7 +17,7 @@ class SuccessResponse {
 class ErrorResponse extends SuccessResponse {
     constructor(statusCode, message) {
         super(statusCode, message)
-        this.status = 'exception'
+        this.status = 'error'
     }
 }
 
