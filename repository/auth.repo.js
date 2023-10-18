@@ -1,6 +1,6 @@
 const UserModel = require('../model/user.model')
-const LoginRegistrationDto = require('../dto/login-registration.dto')
-const { encryptPassword } = require('../helper/auth.helper')
+const UserDto = require('../dto/user.dto')
+const { encryptPassword, generateOTP, generateToken, tokenExpiresAt } = require('../helper/auth.helper')
 
 
 /**
@@ -21,11 +21,14 @@ exports.isUserExistOrNotByEmail = async (email) => {
 exports.createUser = async (payload) => {
     const { email, password } = payload
 
-    const registrationDto = new LoginRegistrationDto()
-    registrationDto.email = email
-    registrationDto.password = await encryptPassword(password)
+    const userDto = new UserDto()
+    userDto.email = email
+    userDto.password = await encryptPassword(password)
+    userDto.otp = await generateOTP()
+    userDto.token = await generateToken(payload, process.env.JWT_SECRET, false)
+    userDto.tokenExpiresAt = await tokenExpiresAt(userDto.token)
 
-    let user = await UserModel.create(registrationDto)
+    let user = await UserModel.create(userDto)
 
     const userId = user._id
     user.createdBy = userId

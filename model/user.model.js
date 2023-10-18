@@ -13,11 +13,11 @@ const userSchema = new Schema({
     dob: { type: String },
     addresses: [ address ],
     expenseCategories: [ expenseCategory ],
-    otp: { type: Number },
+    otp: { type: Number, required: true },
     isEmailVerified: { type: Boolean, default: false },
     emailVerifiedAt: { type: Date },
-    token: { type: String },
-    tokenExpiresAt: { type: Date },
+    token: { type: String, required: true },
+    tokenExpiresAt: { type: Date, required: true },
     isRemember: { type: Boolean, default: false },
     ...commonSchema.obj
 })
