@@ -5,7 +5,7 @@ const commonSchema = require('../schema/common.schema')
 
 
 const userSchema = new Schema({
-    firstName: { type: String, required: true },
+    firstName: { type: String },
     lastName: { type: String },
     userName: { type: String },
     email: { type: String, required: true, unique: true },
@@ -13,7 +13,7 @@ const userSchema = new Schema({
     dob: { type: String },
     addresses: [ address ],
     expenseCategories: [ expenseCategory ],
-    otp: { type: Number, required: true},
+    otp: { type: Number, required: true },
     isEmailVerified: { type: Boolean, default: false },
     emailVerifiedAt: { type: Date },
     token: { type: String, required: true },

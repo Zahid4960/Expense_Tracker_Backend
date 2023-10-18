@@ -150,8 +150,10 @@ definitions:
     properties:
       email:
         type: string
+        default: example@example.com
       password:
         type: string
+        default: password
       isRemember:
         type: boolean
         default: false
@@ -163,13 +165,19 @@ definitions:
     properties:
       id:
         type: string
+        default: 652fcc372b2f01d93d472ccb
       firstName:
         type: string
+        default: firstName
       email:
         type: string
+        default: example@example.com
       isRemember:
         type: boolean
+        default: false
       token:
         type: string
+        default: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFudUBnLmNvbSIsInBhc3N3b3JkIjoiMTIzNDU2NzgiLCJpYXQiOjE2OTc2MzE0MjEsImV4cCI6MTY5NzYzNTAyMX0.sxbsYFDGBs9n45ifg7MkBl13QG_myaUkuGVhgfS5mVw
       tokenExpiresAt:
         type: string
+        default: 2023-10-18 07:17:01 PM
