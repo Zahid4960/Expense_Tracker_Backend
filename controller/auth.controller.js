@@ -6,9 +6,9 @@ const { registration } = require('../service/auth.service')
 
 /**
  * controller to register user into the system
- * @param {*} req 
- * @param {*} res  
- * @returns SuccessResponse || ErrorResponse || ExceptionResponse
+ * @param {*} req
+ * @param {*} res
+ * @return {*} SuccessResponse || ErrorResponse || ExceptionResponse
  */
 exports.registration = async (req, res) => {
     try{
@@ -23,7 +23,7 @@ exports.registration = async (req, res) => {
         await registration(item)
 
         return responseFormatter(res, new SuccessResponse(200, 'Registration successful!'))
-    
+
     }catch (e) {
         console.error(e)
         responseFormatter(res, new ExceptionResponse(e))
@@ -33,9 +33,9 @@ exports.registration = async (req, res) => {
 
 /**
  * controller to login user into the system
- * @param {*} req 
- * @param {*} res 
- * @returns SuccessResponse || ErrorResponse || ExceptionResponse
+ * @param {*} req
+ * @param {*} res
+ * @returns {*} SuccessResponse || ErrorResponse || ExceptionResponse
  */
 exports.login = async (req, res) => {
     try{
