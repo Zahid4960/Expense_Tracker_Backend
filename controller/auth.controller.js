@@ -1,7 +1,7 @@
 const { responseFormatter } = require('../utility/response-formatter')
 const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../utility/response')
 const loginRegistrationValidationSchema = require('../validation/login-registration.validation')
-const { registration } = require('../service/auth.service')
+const { registration, login } = require('../service/auth.service')
 
 
 /**
@@ -17,7 +17,7 @@ exports.registration = async (req, res) => {
         const { error } = loginRegistrationValidationSchema.validate(item)
 
         if(error){
-            return responseFormatter(res, new ErrorResponse(400, error.details))
+            return responseFormatter(res, new ErrorResponse(400, error.details[0].message))
         }
 
         await registration(item)
@@ -39,7 +39,19 @@ exports.registration = async (req, res) => {
  */
 exports.login = async (req, res) => {
     try{
-        responseFormatter(res, new SuccessResponse(200, 'Login successful!'))
+        const item = req.body
+
+        const { email, password } = item
+
+        const { error } = loginRegistrationValidationSchema.validate({ email: email, password: password })
+
+        if(error){
+            return responseFormatter(res, new ErrorResponse(400, error.details[0].message))
+        }
+
+        const userPayload = await login(item)
+
+        responseFormatter(res, new SuccessResponse(200, 'Login successful!', userPayload))
     }catch (e) {
         console.error(e)
         responseFormatter(res, new ExceptionResponse(e))
