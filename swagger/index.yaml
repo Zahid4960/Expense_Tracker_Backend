@@ -104,6 +104,32 @@ paths:
           schema:
             $ref: "#/definitions/LoginResponse"
 
+  /user/verify-via-otp:
+    post:
+      summary: User verification
+      description: |
+        User verification via otp
+      tags:
+        - User
+      consumes:
+        - application/json
+      security:
+       - api_token: []
+      parameters:
+        - name: item
+          in: body
+          required: true
+          description: |
+            Set reqest parameter to user verify
+          schema:
+            $ref: "#/definitions/UserVerificationObject"
+      responses:
+        "200":
+          description: |
+            Response after successful user verification
+          schema:
+            $ref: "#/definitions/Success"
+
 
 ##############################################################################################################                                                                                                         #
 #                                     # Definitions #                                                                                                                                                                                                      #
@@ -111,38 +137,35 @@ paths:
 definitions:
   Success:
     type: object
-    description: |
-      Success
+    description: "Success"
     properties:
       statusCode:
         type: integer
         default: 200
       status:
         type: string
-        default: success
+        default: "success"
       message:
         type: string
-        default: Success message
+        default: "Success message"
 
   RegistrationObject:
     type: object
-    description: |
-      Login Object
+    description: "Login Object"
     required:
       - email
       - password
     properties:
       email:
         type: string
-        default: example@example.com
+        default: "example@example.com"
       password:
         type: string
-        default: password
+        default: "password"
 
   LoginObject:
     type: object
-    description: |
-      Login Object
+    description: "Login Object"
     required:
       - email
       - password
@@ -150,26 +173,47 @@ definitions:
     properties:
       email:
         type: string
+        default: "example@example.com"
       password:
         type: string
+        default: "password"
       isRemember:
         type: boolean
         default: false
 
   LoginResponse:
     type: object
-    description: |
-      Login Response
+    description: "Login Response"
     properties:
       id:
         type: string
+        default: "652fcc372b2f01d93d472ccb"
       firstName:
         type: string
+        default: "firstName"
       email:
         type: string
+        default: "example@example.com"
       isRemember:
         type: boolean
+        default: false
       token:
         type: string
+        default: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.............."
       tokenExpiresAt:
         type: string
+        default: "2023-10-18 07:17:01 PM"
+
+  UserVerificationObject:
+    type: object
+    description: "User Verification Object"
+    required:
+      - email
+      - otp
+    properties:
+      email:
+        type: string
+        default: "example@example.com"
+      otp:
+        type: number
+        default: 1234
