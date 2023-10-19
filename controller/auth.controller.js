@@ -1,7 +1,7 @@
 const { responseFormatter } = require('../utility/response-formatter')
 const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../utility/response')
-const loginRegistrationValidationSchema = require('../validation/login-registration.validation')
-const { registration, login } = require('../service/auth.service')
+const { loginRegistrationValidationSchema, userVerifyOtpValidationSchema } = require('../validation/user.validation')
+const { registration, login, verifyUserViaOtp } = require('../service/auth.service')
 
 
 /**
@@ -52,6 +52,32 @@ exports.login = async (req, res) => {
         const userPayload = await login(item)
 
         responseFormatter(res, new SuccessResponse(200, 'Login successful!', userPayload))
+    }catch (e) {
+        console.error(e)
+        responseFormatter(res, new ExceptionResponse(e))
+    }
+}
+
+
+/**
+ * controller function to verify user via otp
+ * @param {*} req
+ * @param {*} res
+ * @return {*} SuccessResponse || ErrorResponse || ExceptionResponse
+ */
+exports.verifyUserViaOtp = async (req, res) => {
+    try{
+        const payload = req.body
+
+        const { error } = userVerifyOtpValidationSchema.validate(payload)
+
+        if(error){
+            return responseFormatter(res, new ErrorResponse(400, error.details[0].message))
+        }
+
+        await verifyUserViaOtp(payload)
+
+        responseFormatter(res, new SuccessResponse(200, 'User verification successful!'))
     }catch (e) {
         console.error(e)
         responseFormatter(res, new ExceptionResponse(e))
