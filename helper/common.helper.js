@@ -2,7 +2,7 @@ const moment = require('moment')
 
 
 /**
- *
+ * helper function to convert iso date time to utc date time
  * @param {string} dateTime
  * @return {string} date time in Iso format
  */

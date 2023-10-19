@@ -46,3 +46,26 @@ exports.login = async (payload) => {
     }
     throw new CustomException(404, 'User not found!')
 }
+
+
+/**
+ * service function to handle user verification using otp
+ * @param {*} payload
+ * @return {*}
+ */
+exports.verifyUserViaOtp = async (payload) => {
+    const { email, otp } = payload
+
+    const user = await getUserByEmail(email)
+
+    if(user !== undefined && user.otp === otp){
+        user.isEmailVerified = true
+        user.emailVerifiedAt = Date.now()
+        user.updatedAt = Date.now()
+        user.updatedBy = user._id
+        user.save()
+
+        return
+    }
+    throw new CustomException(409, 'Invalid email or otp!')
+}
