@@ -1,5 +1,5 @@
 /**
- * class for user dto
+ * dto class for user
  */
 class UserDto {
     constructor(

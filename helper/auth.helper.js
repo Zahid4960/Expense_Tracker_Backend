@@ -9,8 +9,8 @@ const { convertIsoDateTimeToUTCDateTime } = require('./common.helper')
  * @param {string} plainPassword
  * @return {string} encrypted password
  */
-exports.encryptPassword = (plainPassword) => {
-    return bcrypt.hash(plainPassword, parseInt(process.env.PASSWORD_SALT))
+exports.encryptPassword = async (plainPassword) => {
+    return await bcrypt.hash(plainPassword, parseInt(process.env.PASSWORD_SALT))
 }
 
 

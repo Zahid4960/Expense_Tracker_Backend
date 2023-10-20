@@ -18,3 +18,22 @@ exports.userVerifyOtpValidationSchema = joi.object({
     otp: joi.number().required()
 })
 
+
+/**
+ * validation schema for forgot password
+ */
+exports.forgotPasswordValidationSchema = joi.object({
+    email: joi.string().required(),
+    newPassword: joi.string().required()
+})
+
+
+/**
+ * validation schema for change password
+ */
+exports.changePasswordValidationSchema = joi.object({
+    email: joi.string().required(),
+    oldPassword: joi.string().required(),
+    newPassword: joi.string().required()
+})
+

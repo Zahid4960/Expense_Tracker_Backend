@@ -39,25 +39,22 @@ tags:
 paths:
   /:
     get:
-      summary: Expense tracker test API
-      description: |
-        Test API for expense tracker
+      summary: "Expense tracker test API"
+      description: "Test API for expense tracker"
       tags:
         - User
       consumes:
         - application/json
       responses:
         "200":
-          description: |
-            Response after successful api call into the system
+          description: "Response after successful api call into the system"
           schema:
             $ref: "#/definitions/Success"
 
   /user/registration:
     post:
-      summary: User registration
-      description: |
-        User registration into the system with email & password
+      summary: "User registration"
+      description: "User registration into the system with email & password"
       tags:
         - User
       consumes:
@@ -66,22 +63,19 @@ paths:
         - name: item
           in: body
           required: true
-          description: |
-            Set reqest parameter to registration into the system
+          description: "Set request parameter to registration into the system"
           schema:
             $ref: "#/definitions/RegistrationObject"
       responses:
         "200":
-          description: |
-            Response after successful registration into the system
+          description: "Response after successful registration into the system"
           schema:
             $ref: "#/definitions/Success"
 
   /user/login:
     post:
-      summary: User login
-      description: |
-        User log into the system with email & password
+      summary: "User login"
+      description: "User log into the system with email & password"
       tags:
         - User
       consumes:
@@ -93,40 +87,81 @@ paths:
         - name: item
           in: body
           required: true
-          description: |
-            Set reqest parameter to log into the system
+          description: "Set request parameter to log into the system"
           schema:
             $ref: "#/definitions/LoginObject"
       responses:
         "200":
-          description: |
-            Response after successful log into the system
+          description: "success"
           schema:
             $ref: "#/definitions/LoginResponse"
 
   /user/verify-via-otp:
     post:
-      summary: User verification
-      description: |
-        User verification via otp
+      summary: "User verification"
+      description: "User verification via otp"
       tags:
         - User
       consumes:
         - application/json
       security:
-       - api_token: []
+        - api_token: [ ]
       parameters:
         - name: item
           in: body
           required: true
-          description: |
-            Set reqest parameter to user verify
+          description: "Set request parameter to user verify"
           schema:
             $ref: "#/definitions/UserVerificationObject"
       responses:
         "200":
-          description: |
-            Response after successful user verification
+          description: "success"
+          schema:
+            $ref: "#/definitions/Success"
+
+  /user/forgot-password:
+    post:
+      summary: "User forgot password"
+      description: "User will change password due to forgot password"
+      tags:
+        - User
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: item
+          in: body
+          required: true
+          description: "Set request parameter to update password"
+          schema:
+            $ref: "#/definitions/ForgotPasswordObject"
+      responses:
+        "200":
+          description: "Response after successful password update due to forgot password"
+          schema:
+            $ref: "#/definitions/Success"
+
+  /user/change-password:
+    post:
+      summary: "User change password"
+      description: "User will change password"
+      tags:
+        - User
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: item
+          in: body
+          required: true
+          description: "Set request parameter to change password"
+          schema:
+            $ref: "#/definitions/PasswordChangeObject"
+      responses:
+        "200":
+          description: "Response after successful password change"
           schema:
             $ref: "#/definitions/Success"
 
@@ -217,3 +252,35 @@ definitions:
       otp:
         type: number
         default: 1234
+
+  ForgotPasswordObject:
+    type: object
+    description: "Forgot Password Object"
+    required:
+      - email
+      - newPassword
+    properties:
+      email:
+        type: string
+        default: "example@example.com"
+      newPassword:
+        type: string
+        default: "password"
+
+  PasswordChangeObject:
+    type: object
+    description: "Password Change Object"
+    required:
+      - email
+      - oldPassword
+      - newPassword
+    properties:
+      email:
+        type: string
+        default: "example@example.com"
+      oldPassword:
+        type: string
+        default: "oldPassword"
+      newPassword:
+        type: string
+        default: "newPassword"

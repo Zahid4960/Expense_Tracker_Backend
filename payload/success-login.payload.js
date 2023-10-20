@@ -1,5 +1,5 @@
 /**
- * class for success login payload
+ * payload class for success login
  */
 class SuccessLoginPayload {
     constructor(id, firstName, email, isRemember, token, tokenExpiresAt) {

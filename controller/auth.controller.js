@@ -1,16 +1,27 @@
 const { responseFormatter } = require('../utility/response-formatter')
 const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../utility/response')
-const { loginRegistrationValidationSchema, userVerifyOtpValidationSchema } = require('../validation/user.validation')
-const { registration, login, verifyUserViaOtp } = require('../service/auth.service')
+const {
+    registration,
+    login,
+    verifyUserViaOtp,
+    forgotPassword,
+    changePassword
+} = require('../service/auth.service')
+const {
+    loginRegistrationValidationSchema,
+    userVerifyOtpValidationSchema,
+    forgotPasswordValidationSchema,
+    changePasswordValidationSchema
+} = require('../validation/user.validation')
 
 
 /**
- * controller to register user into the system
+ * controller function to register user into the system
  * @param {*} req
  * @param {*} res
  * @return {*} SuccessResponse || ErrorResponse || ExceptionResponse
  */
-exports.registration = async (req, res) => {
+exports.registrationPost = async (req, res) => {
     try{
         const item = req.body
 
@@ -32,12 +43,12 @@ exports.registration = async (req, res) => {
 
 
 /**
- * controller to login user into the system
+ * controller function to login user into the system
  * @param {*} req
  * @param {*} res
  * @returns {*} SuccessResponse || ErrorResponse || ExceptionResponse
  */
-exports.login = async (req, res) => {
+exports.loginPost = async (req, res) => {
     try{
         const item = req.body
 
@@ -65,7 +76,7 @@ exports.login = async (req, res) => {
  * @param {*} res
  * @return {*} SuccessResponse || ErrorResponse || ExceptionResponse
  */
-exports.verifyUserViaOtp = async (req, res) => {
+exports.verifyUserViaOtpPost = async (req, res) => {
     try{
         const payload = req.body
 
@@ -78,6 +89,58 @@ exports.verifyUserViaOtp = async (req, res) => {
         await verifyUserViaOtp(payload)
 
         responseFormatter(res, new SuccessResponse(200, 'User verification successful!'))
+    }catch (e) {
+        console.error(e)
+        responseFormatter(res, new ExceptionResponse(e))
+    }
+}
+
+
+/**
+ * controller function to update password due to forgot password
+ * @param {*} req
+ * @param {*} res
+ * @return {*} success response || error response || exception response
+ */
+exports.forgotPasswordPost = async (req, res) => {
+    try{
+        const payload = req.body
+
+        const { error } = forgotPasswordValidationSchema.validate(payload)
+
+        if(error){
+            return responseFormatter(res, new ErrorResponse(400, error.details[0].message))
+        }
+
+        await forgotPassword(payload)
+
+        responseFormatter(res, new SuccessResponse(200, 'Password updated successfully!'))
+    }catch (e) {
+        console.error(e)
+        responseFormatter(res, new ExceptionResponse(e))
+    }
+}
+
+
+/**
+ * controller function for changing password
+ * @param {*} req
+ * @param {*} res
+ * @return {*} success response || error response || exception response
+ */
+exports.changePasswordPost = async (req, res) => {
+    try{
+        const payload = req.body
+
+        const { error } = changePasswordValidationSchema.validate(payload)
+
+        if(error){
+            return responseFormatter(res, new ErrorResponse(400, error.details[0].message))
+        }
+
+        await changePassword(payload)
+
+        responseFormatter(res, new SuccessResponse(200, 'Password changed successfully!'))
     }catch (e) {
         console.error(e)
         responseFormatter(res, new ExceptionResponse(e))

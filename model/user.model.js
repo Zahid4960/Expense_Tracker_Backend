@@ -4,6 +4,9 @@ const expenseCategory = require('../schema/expense-category.schema')
 const commonSchema = require('../schema/common.schema')
 
 
+/**
+ * model for user
+ */
 const userSchema = new Schema({
     firstName: { type: String },
     lastName: { type: String },

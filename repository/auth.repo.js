@@ -4,7 +4,7 @@ const { encryptPassword, generateOTP, generateToken, tokenExpiresAt } = require(
 
 
 /**
- * function to check existence of user by email
+ * repository function to check existence of user by email
  * @param {string} email
  * @returns {boolean} true || false
  */
@@ -15,7 +15,7 @@ exports.isUserExistOrNotByEmail = async (email) => {
 
 
 /**
- * function to get user information using email
+ * repository function to get user information using email
  * @param {string} email
  * @return {*} user info
  */
@@ -25,7 +25,7 @@ exports.getUserByEmail = async (email) => {
 
 
 /**
- * function to create user
+ * repository function to create user
  * @param {*} payload
  */
 exports.createUser = async (payload) => {
@@ -43,5 +43,5 @@ exports.createUser = async (payload) => {
     const userId = user._id
     user.createdBy = userId
     user.updatedBy = userId
-    user.save()
+    await user.save()
 }
