@@ -1,5 +1,5 @@
 const { isUserExistOrNotByEmail, createUser, getUserByEmail } = require('../repository/auth.repo')
-const { comparePassword, formattedSuccessLoginResponse } = require('../helper/auth.helper')
+const { comparePassword, formattedSuccessLoginResponse, encryptPassword } = require('../helper/auth.helper')
 const CustomException = require('../utility/custom-exception')
 
 
@@ -71,4 +71,27 @@ exports.verifyUserViaOtp = async (payload) => {
         throw new CustomException(409, 'Invalid otp!')
     }
     throw new CustomException(404, 'User not found!')
+}
+
+
+/**
+ * service function to update password due to forgot password
+ * @param payload
+ * @return {*} null || custom exception
+ */
+exports.forgotPassword = async (payload) => {
+    const { email, newPassword } = payload
+
+    const user = await getUserByEmail(email)
+
+    if(user !== null){
+        user.password = await encryptPassword(newPassword)
+        user.updatedAt = Date.now()
+        user.updatedBy = user._id
+        await user.save()
+
+        return
+    }
+
+    throw new CustomException(404, 'User not found with this email!')
 }

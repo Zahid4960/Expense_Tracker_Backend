@@ -1,7 +1,11 @@
 const { responseFormatter } = require('../utility/response-formatter')
 const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../utility/response')
-const { loginRegistrationValidationSchema, userVerifyOtpValidationSchema } = require('../validation/user.validation')
-const { registration, login, verifyUserViaOtp } = require('../service/auth.service')
+const { registration, login, verifyUserViaOtp, forgotPassword } = require('../service/auth.service')
+const {
+    loginRegistrationValidationSchema,
+    userVerifyOtpValidationSchema,
+    forgotPasswordValidationSchema
+} = require('../validation/user.validation')
 
 
 /**
@@ -85,8 +89,24 @@ exports.verifyUserViaOtpPost = async (req, res) => {
 }
 
 
+/**
+ * controller function to update password due to forgot password
+ * @param {*} req
+ * @param {*} res
+ * @return {*} success response || error response || exception response
+ */
 exports.forgotPasswordPost = async (req, res) => {
     try{
+        const payload = req.body
+
+        const { error } = forgotPasswordValidationSchema.validate(payload)
+
+        if(error){
+            return responseFormatter(res, new ErrorResponse(400, error.details[0].message))
+        }
+
+        await forgotPassword(payload)
+
         responseFormatter(res, new SuccessResponse(200, 'Password updated successfully!'))
     }catch (e) {
         console.error(e)
