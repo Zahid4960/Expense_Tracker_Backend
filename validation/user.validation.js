@@ -27,3 +27,13 @@ exports.forgotPasswordValidationSchema = joi.object({
     newPassword: joi.string().required()
 })
 
+
+/**
+ * validation schema for change password
+ */
+exports.changePasswordValidationSchema = joi.object({
+    email: joi.string().required(),
+    oldPassword: joi.string().required(),
+    newPassword: joi.string().required()
+})
+

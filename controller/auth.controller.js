@@ -1,10 +1,17 @@
 const { responseFormatter } = require('../utility/response-formatter')
 const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../utility/response')
-const { registration, login, verifyUserViaOtp, forgotPassword } = require('../service/auth.service')
+const {
+    registration,
+    login,
+    verifyUserViaOtp,
+    forgotPassword,
+    changePassword
+} = require('../service/auth.service')
 const {
     loginRegistrationValidationSchema,
     userVerifyOtpValidationSchema,
-    forgotPasswordValidationSchema
+    forgotPasswordValidationSchema,
+    changePasswordValidationSchema
 } = require('../validation/user.validation')
 
 
@@ -108,6 +115,32 @@ exports.forgotPasswordPost = async (req, res) => {
         await forgotPassword(payload)
 
         responseFormatter(res, new SuccessResponse(200, 'Password updated successfully!'))
+    }catch (e) {
+        console.error(e)
+        responseFormatter(res, new ExceptionResponse(e))
+    }
+}
+
+
+/**
+ * controller function for changing password
+ * @param {*} req
+ * @param {*} res
+ * @return {*} success response || error response || exception response
+ */
+exports.changePasswordPost = async (req, res) => {
+    try{
+        const payload = req.body
+
+        const { error } = changePasswordValidationSchema.validate(payload)
+
+        if(error){
+            return responseFormatter(res, new ErrorResponse(400, error.details[0].message))
+        }
+
+        await changePassword(payload)
+
+        responseFormatter(res, new SuccessResponse(200, 'Password changed successfully!'))
     }catch (e) {
         console.error(e)
         responseFormatter(res, new ExceptionResponse(e))

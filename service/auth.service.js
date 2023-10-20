@@ -39,7 +39,6 @@ exports.login = async (payload) => {
             user.token = formattedRes.token
             user.tokenExpiresAt = formattedRes.tokenExpiresAt
             await user.save()
-
             return formattedRes
         }
         throw new CustomException(409, 'Invalid password!')
@@ -65,7 +64,6 @@ exports.verifyUserViaOtp = async (payload) => {
             user.updatedAt = Date.now()
             user.updatedBy = user._id
             await user.save()
-
             return
         }
         throw new CustomException(409, 'Invalid otp!')
@@ -89,9 +87,34 @@ exports.forgotPassword = async (payload) => {
         user.updatedAt = Date.now()
         user.updatedBy = user._id
         await user.save()
-
         return
     }
+    throw new CustomException(404, 'User not found with this email!')
+}
 
+
+/**
+ * service function to change password
+ * @param {*} payload
+ * @return {*} null || custom exception
+ */
+exports.changePassword = async (payload) => {
+    const { email, oldPassword, newPassword } = payload
+
+    const user = await getUserByEmail(email)
+
+    if(user !== null){
+        if(await comparePassword(oldPassword, user.password)){
+            if(oldPassword !== newPassword){
+                user.password = await encryptPassword(newPassword)
+                user.updatedAt = Date.now()
+                user.updatedBy = user._id
+                await user.save()
+                return
+            }
+            throw new CustomException(409, 'Old password & new password can not same!')
+        }
+        throw new CustomException(409, 'Old password do not match!')
+    }
     throw new CustomException(404, 'User not found with this email!')
 }
