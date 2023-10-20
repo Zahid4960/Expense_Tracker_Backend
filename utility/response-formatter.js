@@ -1,5 +1,5 @@
 /**
- * function to format all the responses
+ * utility function to format all the responses
  * @param {*} res
  * @param {*} exception
  */

@@ -5,7 +5,7 @@ const dbName = process.env.MONGODB_NAME
 
 
 /**
- * function to connect with database
+ * config function to connect with database
  */
 exports.dbConnection = async () => {
     try{

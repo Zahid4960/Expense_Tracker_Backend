@@ -1,6 +1,9 @@
 const { Schema } = require('mongoose')
 
 
+/**
+ * schema for expense category
+ */
 const expenseCategorySchema = new Schema({
     categoryName: { type: String, required: true },
     description: { type: String, required: true},

@@ -5,12 +5,12 @@ const { registration, login, verifyUserViaOtp } = require('../service/auth.servi
 
 
 /**
- * controller to register user into the system
+ * controller function to register user into the system
  * @param {*} req
  * @param {*} res
  * @return {*} SuccessResponse || ErrorResponse || ExceptionResponse
  */
-exports.registration = async (req, res) => {
+exports.registrationPost = async (req, res) => {
     try{
         const item = req.body
 
@@ -32,12 +32,12 @@ exports.registration = async (req, res) => {
 
 
 /**
- * controller to login user into the system
+ * controller function to login user into the system
  * @param {*} req
  * @param {*} res
  * @returns {*} SuccessResponse || ErrorResponse || ExceptionResponse
  */
-exports.login = async (req, res) => {
+exports.loginPost = async (req, res) => {
     try{
         const item = req.body
 
@@ -65,7 +65,7 @@ exports.login = async (req, res) => {
  * @param {*} res
  * @return {*} SuccessResponse || ErrorResponse || ExceptionResponse
  */
-exports.verifyUserViaOtp = async (req, res) => {
+exports.verifyUserViaOtpPost = async (req, res) => {
     try{
         const payload = req.body
 
@@ -78,6 +78,16 @@ exports.verifyUserViaOtp = async (req, res) => {
         await verifyUserViaOtp(payload)
 
         responseFormatter(res, new SuccessResponse(200, 'User verification successful!'))
+    }catch (e) {
+        console.error(e)
+        responseFormatter(res, new ExceptionResponse(e))
+    }
+}
+
+
+exports.forgotPasswordPost = async (req, res) => {
+    try{
+        responseFormatter(res, new SuccessResponse(200, 'Password updated successfully!'))
     }catch (e) {
         console.error(e)
         responseFormatter(res, new ExceptionResponse(e))

@@ -5,7 +5,7 @@ const CustomException = require('../utility/custom-exception')
 
 /**
  * service function containing business logic of registration user
- * @param {*} payload
+ * @param {*} payload || custom exception
  */
 exports.registration = async (payload) => {
     const { email } = payload
@@ -22,7 +22,7 @@ exports.registration = async (payload) => {
 /**
  * service function to handle login functionality
  * @param {*} payload
- * @return {*} formatted response
+ * @return {*} formatted response || custom exception
  */
 exports.login = async (payload) => {
     const { email, password, isRemember } = payload
@@ -38,7 +38,7 @@ exports.login = async (payload) => {
             user.isRemember = isRemember
             user.token = formattedRes.token
             user.tokenExpiresAt = formattedRes.tokenExpiresAt
-            user.save()
+            await user.save()
 
             return formattedRes
         }
@@ -51,21 +51,24 @@ exports.login = async (payload) => {
 /**
  * service function to handle user verification using otp
  * @param {*} payload
- * @return {*}
+ * @return {*} null || custom exception
  */
 exports.verifyUserViaOtp = async (payload) => {
     const { email, otp } = payload
 
     const user = await getUserByEmail(email)
 
-    if(user !== undefined && user.otp === otp){
-        user.isEmailVerified = true
-        user.emailVerifiedAt = Date.now()
-        user.updatedAt = Date.now()
-        user.updatedBy = user._id
-        user.save()
+    if(user !== null){
+        if(user.otp === otp){
+            user.isEmailVerified = true
+            user.emailVerifiedAt = Date.now()
+            user.updatedAt = Date.now()
+            user.updatedBy = user._id
+            await user.save()
 
-        return
+            return
+        }
+        throw new CustomException(409, 'Invalid otp!')
     }
-    throw new CustomException(409, 'Invalid email or otp!')
+    throw new CustomException(404, 'User not found!')
 }

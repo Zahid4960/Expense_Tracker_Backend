@@ -1,6 +1,9 @@
 const { Schema } = require('mongoose')
 
 
+/**
+ * schema for addresses
+ */
 const addressSchema = new Schema({
     address: { type: String, required: true },
     country: { type: String, required: true },

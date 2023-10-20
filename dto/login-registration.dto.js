@@ -1,5 +1,5 @@
 /**
- * class for login & registration dto
+ * dto class for login & registration
  */
 class LoginRegistrationDto {
     constructor(email, password) {

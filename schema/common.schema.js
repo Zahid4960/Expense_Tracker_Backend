@@ -1,6 +1,9 @@
 const { Schema } = require('mongoose')
 
 
+/**
+ * schema for common
+ */
 const commonSchema = new Schema({
     createdAt: { type: Date, default: Date.now() },
     updatedAt: { type: Date, default: Date.now() },
