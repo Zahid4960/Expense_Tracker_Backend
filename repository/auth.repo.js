@@ -1,6 +1,6 @@
 const UserModel = require('../model/user.model')
-const UserDto = require('../dto/user.dto')
 const { encryptPassword, generateOTP, generateToken, tokenExpiresAt } = require('../helper/auth.helper')
+const jwt = require("jsonwebtoken");
 
 
 /**
@@ -31,17 +31,37 @@ exports.getUserByEmail = async (email) => {
 exports.createUser = async (payload) => {
     const { email, password } = payload
 
-    const userDto = new UserDto()
-    userDto.email = email
-    userDto.password = await encryptPassword(password)
-    userDto.otp = generateOTP()
-    userDto.token = generateToken(payload, process.env.JWT_SECRET, false)
-    userDto.tokenExpiresAt = tokenExpiresAt(userDto.token)
+    const token = generateToken(payload)
 
-    let user = await UserModel.create(userDto)
+    const userObj = {
+        email: email,
+        password: await encryptPassword(password),
+        otp: generateOTP(),
+        token: token,
+        tokenExpiresAt: tokenExpiresAt(token)
+    }
+
+    let user = await UserModel.create(userObj)
 
     const userId = user._id
     user.createdBy = userId
     user.updatedBy = userId
     await user.save()
+}
+
+
+
+/**
+ * repository function to get user info form token
+ * @param {string} token
+ * @return {*} user information || null
+ */
+exports.getUserInfoFromToken = async (token) => {
+    const decodedToken = await jwt.verify(token, process.env.JWT_SECRET)
+
+    if(decodedToken){
+        return await this.getUserByEmail(decodedToken.email)
+    }
+
+    return null
 }

@@ -165,6 +165,74 @@ paths:
           schema:
             $ref: "#/definitions/Success"
 
+  /user/update-profile/{userId}:
+    patch:
+      summary: "User profile update"
+      description: "User will update his profile"
+      tags:
+        - User
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+        - name: item
+          in: body
+          required: true
+          description: "Set request parameter to update user profile"
+          schema:
+            $ref: "#/definitions/UserProfileUpdateObject"
+      responses:
+        "200":
+          description: "Response after successful user profile update"
+          schema:
+            $ref: "#/definitions/Success"
+
+  /user/{userId}:
+    get:
+      summary: "Get user information"
+      description: "Get any specific user information by user id"
+      tags:
+        - User
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+      responses:
+        "200":
+          description: "Response containing user information"
+          schema:
+            $ref: "#/definitions/UserInformationResponse"
+
+    delete:
+      summary: "Deactivate user account"
+      description: "Deactivate any specific user account by user id"
+      tags:
+        - User
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+      responses:
+        "200":
+          description: "Response after successfully deactivating user account"
+          schema:
+            $ref: "#/definitions/Success"
+
 
 ##############################################################################################################                                                                                                         #
 #                                     # Definitions #                                                                                                                                                                                                      #
@@ -243,26 +311,18 @@ definitions:
     type: object
     description: "User Verification Object"
     required:
-      - email
       - otp
     properties:
-      email:
-        type: string
-        default: "example@example.com"
       otp:
-        type: number
-        default: 1234
+        type: string
+        default: "1234"
 
   ForgotPasswordObject:
     type: object
     description: "Forgot Password Object"
     required:
-      - email
       - newPassword
     properties:
-      email:
-        type: string
-        default: "example@example.com"
       newPassword:
         type: string
         default: "password"
@@ -271,16 +331,94 @@ definitions:
     type: object
     description: "Password Change Object"
     required:
-      - email
       - oldPassword
       - newPassword
     properties:
-      email:
-        type: string
-        default: "example@example.com"
       oldPassword:
         type: string
         default: "oldPassword"
       newPassword:
         type: string
         default: "newPassword"
+
+  UserProfileUpdateObject:
+    type: object
+    description: User Profile Update Object
+    properties:
+      firstName:
+        type: string
+        default: "first name"
+      lastName:
+        type: string
+        default: "last name"
+      userName:
+        type: string
+        default: "user name"
+      dob:
+        type: string
+        default: "14-02-1997"
+      gender:
+        type: string
+        default: "Male"
+
+  UserInformationResponse:
+    type: object
+    description: User Information Response
+    properties:
+      firstName:
+        type: string
+        default: "first name"
+      lastName:
+        type: string
+        default: "last name"
+      userName:
+        type: string
+        default: "user name"
+      dob:
+        type: string
+        default: "14-02-1997"
+      gender:
+        type: string
+        default: "Male"
+      email:
+        type: string
+        default: "example@example.com"
+      addresses:
+        type: array
+        items:
+          $ref: "#/definitions/AddressResponse"
+#      expenseCategories:
+#        type: array
+#        items:
+#          $ref: "#/definitions/ExpenseCategoriesResponse"
+
+  AddressResponse:
+    type: object
+    description: "Address Response"
+    properties:
+      address:
+        type: string
+        default: "address"
+      country:
+        type: string
+        default: "country"
+      city:
+        type: string
+        default: "city"
+      state:
+        type: string
+        default: "state"
+      postalCode:
+        type: string
+        default: "5840"
+
+  ExpenseCategoriesResponse:
+    type: object
+    description: "Expense Categories Response"
+    properties:
+      categoryName:
+        type: string
+        default: "category name"
+      description:
+        type: string
+        default: "description"

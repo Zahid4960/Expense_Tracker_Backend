@@ -1,6 +1,17 @@
-const { isUserExistOrNotByEmail, createUser, getUserByEmail } = require('../repository/auth.repo')
-const { comparePassword, formattedSuccessLoginResponse, encryptPassword } = require('../helper/auth.helper')
+const { convertIsoDateTimeToUTCDateTime } = require("../helper/common.helper")
 const CustomException = require('../utility/custom-exception')
+const {
+    isUserExistOrNotByEmail,
+    createUser,
+    getUserByEmail,
+    getUserInfoFromToken
+} = require('../repository/auth.repo')
+const {
+    comparePassword,
+    encryptPassword,
+    generateToken,
+    tokenExpiresAt
+} = require('../helper/auth.helper')
 
 
 /**
@@ -33,15 +44,16 @@ exports.login = async (payload) => {
         const isMatched = await comparePassword(password, user.password)
 
         if(isMatched){
-            const formattedRes = await formattedSuccessLoginResponse(user, email, password, isRemember)
+            const token = generateToken({ email: user.email, password }, isRemember)
 
             user.isRemember = isRemember
-            user.token = formattedRes.token
-            user.tokenExpiresAt = formattedRes.tokenExpiresAt
+            user.token = token
+            user.tokenExpiresAt = convertIsoDateTimeToUTCDateTime(tokenExpiresAt(token))
             await user.save()
-            return formattedRes
+
+            return user
         }
-        throw new CustomException(409, 'Invalid password!')
+        throw new CustomException(409, 'Wrong password!')
     }
     throw new CustomException(404, 'User not found!')
 }
@@ -50,12 +62,13 @@ exports.login = async (payload) => {
 /**
  * service function to handle user verification using otp
  * @param {*} payload
+ * @param {string} token
  * @return {*} null || custom exception
  */
-exports.verifyUserViaOtp = async (payload) => {
-    const { email, otp } = payload
+exports.verifyUserViaOtp = async (payload, token) => {
+    const { otp } = payload
 
-    const user = await getUserByEmail(email)
+    const user = await getUserInfoFromToken(token)
 
     if(user !== null){
         if(user.otp === otp){
@@ -64,6 +77,7 @@ exports.verifyUserViaOtp = async (payload) => {
             user.updatedAt = Date.now()
             user.updatedBy = user._id
             await user.save()
+
             return
         }
         throw new CustomException(409, 'Invalid otp!')
@@ -74,39 +88,44 @@ exports.verifyUserViaOtp = async (payload) => {
 
 /**
  * service function to update password due to forgot password
- * @param payload
+ * @param {*} payload
+ *  * @param {string} token
  * @return {*} null || custom exception
  */
-exports.forgotPassword = async (payload) => {
-    const { email, newPassword } = payload
+exports.forgotPassword = async (payload, token) => {
+    const { newPassword } = payload
 
-    const user = await getUserByEmail(email)
+    const user = await getUserInfoFromToken(token)
 
     if(user !== null){
         user.password = await encryptPassword(newPassword)
+        user.token = generateToken({ email: user.email, password: newPassword }, user.isRemember)
         user.updatedAt = Date.now()
         user.updatedBy = user._id
         await user.save()
+
         return
     }
-    throw new CustomException(404, 'User not found with this email!')
+    throw new CustomException(404, 'User not found!')
 }
 
 
 /**
  * service function to change password
  * @param {*} payload
+ * @param {string} token
  * @return {*} null || custom exception
  */
-exports.changePassword = async (payload) => {
-    const { email, oldPassword, newPassword } = payload
+exports.changePassword = async (payload, token) => {
+    const { oldPassword, newPassword } = payload
 
-    const user = await getUserByEmail(email)
+    const user = await getUserInfoFromToken(token)
 
     if(user !== null){
         if(await comparePassword(oldPassword, user.password)){
             if(oldPassword !== newPassword){
                 user.password = await encryptPassword(newPassword)
+                user.token = generateToken({ email: user.email, password: newPassword }, user.isRemember)
                 user.updatedAt = Date.now()
                 user.updatedBy = user._id
                 await user.save()

@@ -12,4 +12,6 @@ class SuccessLoginPayload {
     }
 }
 
-module.exports = SuccessLoginPayload
+module.exports = {
+    SuccessLoginPayload
+}

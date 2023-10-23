@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const { ErrorResponse } = require('../utility/response')
 const { responseFormatter } = require('../utility/response-formatter')
 const { getUserByEmail } = require('../repository/auth.repo')
+const { getTokenFromHeader, comparePassword } = require('../helper/auth.helper')
 
 
 /**
@@ -12,13 +13,11 @@ const { getUserByEmail } = require('../repository/auth.repo')
  * @return {*} error response || pass request to controller
  */
 exports.verifyToken = (req, res, next) => {
-    const authToken = req.headers.authorization
+    const token = getTokenFromHeader(req)
 
-    if(!authToken){
+    if(!token){
         return responseFormatter(res, new ErrorResponse(401, 'No token provided!'))
     }
-
-    let token = authToken.split(" ")[1]
 
     jwt.verify(token, process.env.JWT_SECRET, (err) => {
         if(err){
@@ -38,7 +37,7 @@ exports.verifyToken = (req, res, next) => {
  * @return {*} error response || pass request to controller
  */
 exports.verifyUserAccount = async (req, res, next) => {
-    const token = req.headers.authorization.split(' ')[1]
+    const token = getTokenFromHeader(req)
 
     jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
         if(err){
@@ -48,7 +47,11 @@ exports.verifyUserAccount = async (req, res, next) => {
         const user = await getUserByEmail(decodedToken?.email)
 
         if(user !== null && user.isEmailVerified === true){
-            next()
+            if(await comparePassword(decodedToken.password, user.password)){
+                next()
+            }else{
+                return responseFormatter(res, new ErrorResponse(401, 'Invalid token!'))
+            }
         }else{
             return responseFormatter(res, new ErrorResponse(401, 'Your account is not verified yet. Please verify.'))
         }

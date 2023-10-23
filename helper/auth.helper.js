@@ -1,7 +1,5 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const SuccessLoginPayload = require("../payload/success-login.payload")
-const { convertIsoDateTimeToUTCDateTime } = require('./common.helper')
 
 
 /**
@@ -27,26 +25,26 @@ exports.comparePassword = (plainPassword, encryptPassword) => {
 
 /**
  * helper function to generate OTP
- * @return {number} generated OTP
+ * @return {string} generated OTP
  */
 exports.generateOTP = () => {
-    return Math.floor(Math.random() * 10000)
+    const randomNumber = Math.floor(Math.random() * 10000)
+    return randomNumber.toString().padStart(4, '0')
 }
 
 
 /**
  * helper function to generate token
  * @param {*} payload
- * @param {string} jwtSecret
  * @param {boolean} isRemember
  * @return {string} jwt token
  */
-exports.generateToken = (payload, jwtSecret, isRemember = false) => {
+exports.generateToken = (payload, isRemember = false) => {
     const { email, password } = payload
 
     return jwt.sign(
         { email: email, password: password },
-        jwtSecret,
+        process.env.JWT_SECRET,
         isRemember === true ? { expiresIn: '24h'} : { expiresIn: '1h'}
     )
 }
@@ -68,22 +66,11 @@ exports.tokenExpiresAt = (token) => {
 
 
 /**
- * helper function to send back formatted success login response
- * @param {*} user
- * @param {string} email
- * @param {string} password
- * @param {boolean} isRemember
- * @return {*} formatted success login response
+ *
+ * @param {*} req
+ * @return {string | undefined} token || undefined
  */
-exports.formattedSuccessLoginResponse = (user, email, password, isRemember ) => {
-    const payload = new SuccessLoginPayload()
-    payload.id = user._id
-    payload.email = user.email
-    payload.firstName = user.firstName ?? null
-    payload.isRemember = isRemember
-    payload.token = this.generateToken({ email: user.email, password: password}, process.env.JWT_SECRET, isRemember)
-    payload.tokenExpiresAt = convertIsoDateTimeToUTCDateTime(this.tokenExpiresAt(payload.token))
-
-    return payload
+exports.getTokenFromHeader = (req) => {
+    return req.headers?.authorization?.split(' ')[1]
 }
 
