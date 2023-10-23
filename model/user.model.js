@@ -16,7 +16,7 @@ const userSchema = new Schema({
     dob: { type: String },
     addresses: [ address ],
     expenseCategories: [ expenseCategory ],
-    otp: { type: Number, required: true },
+    otp: { type: String, required: true },
     isEmailVerified: { type: Boolean, default: false },
     emailVerifiedAt: { type: Date },
     token: { type: String, required: true },

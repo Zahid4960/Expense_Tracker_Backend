@@ -243,26 +243,18 @@ definitions:
     type: object
     description: "User Verification Object"
     required:
-      - email
       - otp
     properties:
-      email:
-        type: string
-        default: "example@example.com"
       otp:
-        type: number
-        default: 1234
+        type: string
+        default: "1234"
 
   ForgotPasswordObject:
     type: object
     description: "Forgot Password Object"
     required:
-      - email
       - newPassword
     properties:
-      email:
-        type: string
-        default: "example@example.com"
       newPassword:
         type: string
         default: "password"
@@ -271,13 +263,9 @@ definitions:
     type: object
     description: "Password Change Object"
     required:
-      - email
       - oldPassword
       - newPassword
     properties:
-      email:
-        type: string
-        default: "example@example.com"
       oldPassword:
         type: string
         default: "oldPassword"
