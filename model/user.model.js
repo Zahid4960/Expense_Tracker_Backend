@@ -14,6 +14,7 @@ const userSchema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     dob: { type: String },
+    gender: { type: String, enum: ['Male', 'Female'], default: 'Male' },
     addresses: [ address ],
     expenseCategories: [ expenseCategory ],
     otp: { type: String, required: true },
