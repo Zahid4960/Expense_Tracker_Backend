@@ -88,11 +88,26 @@ class UserDto {
     }
 }
 
+
+/**
+ * dto class for user profile update
+ */
+class UserProfileUpdateDto {
+    constructor(firstName, lastName, userName, dob, gender) {
+        this.firstName = firstName
+        this.lastName = lastName
+        this.userName = userName
+        this.dob = dob
+        this.gender = gender
+    }
+}
+
 module.exports = {
     RegistrationDto,
     LoginDto,
     OtpDto,
     ForgotPasswordDto,
     ChangePasswordDto,
-    UserDto
+    UserDto,
+    UserProfileUpdateDto
 }

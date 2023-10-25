@@ -46,14 +46,18 @@ exports.verifyUserAccount = async (req, res, next) => {
 
         const user = await getUserByEmail(decodedToken?.email)
 
-        if(user !== null && user.isEmailVerified === true){
-            if(await comparePassword(decodedToken.password, user.password)){
-                next()
+        if(user !== null){
+            if(user.isEmailVerified){
+                if(await comparePassword(decodedToken.password, user.password)){
+                    next()
+                }else{
+                    return responseFormatter(res, new ErrorResponse(401, 'Invalid token!'))
+                }
             }else{
-                return responseFormatter(res, new ErrorResponse(401, 'Invalid token!'))
+                return responseFormatter(res, new ErrorResponse(401, 'Your account is not verified yet. Please verify!'))
             }
         }else{
-            return responseFormatter(res, new ErrorResponse(401, 'Your account is not verified yet. Please verify.'))
+            return responseFormatter(res, new ErrorResponse(404, 'User not found!'))
         }
     })
 }
