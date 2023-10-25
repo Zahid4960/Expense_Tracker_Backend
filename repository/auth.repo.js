@@ -1,6 +1,6 @@
 const UserModel = require('../model/user.model')
 const { encryptPassword, generateOTP, generateToken, tokenExpiresAt } = require('../helper/auth.helper')
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken")
 
 
 /**
@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
  * @returns {boolean} true || false
  */
 exports.isUserExistOrNotByEmail = async (email) => {
-    const user = await UserModel.findOne({ email: email })
+    const user = await UserModel.findOne({ email: email, deletedAt: null })
     return user !== null
 }
 
@@ -20,7 +20,17 @@ exports.isUserExistOrNotByEmail = async (email) => {
  * @return {*} user info
  */
 exports.getUserByEmail = async (email) => {
-    return await UserModel.findOne({ email: email })
+    return await UserModel.findOne({ email: email, deletedAt: null })
+}
+
+
+/**
+ * repository function to update user profile
+ * @param {string} userId
+ * @return {*} user info of that specific user id
+ */
+exports.getUserById = async (userId) => {
+    return await UserModel.findOne({ _id: userId, deletedAt: null })
 }
 
 

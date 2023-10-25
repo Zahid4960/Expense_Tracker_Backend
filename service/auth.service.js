@@ -4,7 +4,8 @@ const {
     isUserExistOrNotByEmail,
     createUser,
     getUserByEmail,
-    getUserInfoFromToken
+    getUserInfoFromToken,
+    getUserById
 } = require('../repository/auth.repo')
 const {
     comparePassword,
@@ -136,4 +137,53 @@ exports.changePassword = async (payload, token) => {
         throw new CustomException(409, 'Old password do not match!')
     }
     throw new CustomException(404, 'User not found with this email!')
+}
+
+
+/**
+ * service function to update user profile
+ * @param {string} userId
+ * @param {*} payload
+ */
+exports.userProfileUpdate = async (userId, payload) => {
+    const user = await getUserById(userId)
+
+    if(user === null){
+        throw new CustomException(404, 'User not found!')
+    }
+
+    user.firstName = payload.firstName
+    user.lastName = payload.lastName
+    user.userName = payload.userName
+    user.dob = payload.dob
+    user.gender = payload.gender
+    await user.save()
+}
+
+
+/**
+ * service function to get user details
+ * @param {string} userId
+ * @return {*} user details by user id
+ */
+exports.userDetails = async (userId) => {
+    const user = await getUserById(userId)
+
+    if(user === null){
+        throw new CustomException(404, 'User not found!')
+    }
+
+    return user
+}
+
+
+exports.userDelete = async (userId) => {
+    const user = await getUserById(userId)
+
+    if(user === null){
+        throw new CustomException(404, 'User not found!')
+    }
+
+    user.deletedAt = Date.now()
+    await user.save()
 }

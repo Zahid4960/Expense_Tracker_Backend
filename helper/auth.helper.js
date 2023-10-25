@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const { UserDetailsResponse } = require('../response/auth.response')
 
 
 /**
@@ -66,11 +67,32 @@ exports.tokenExpiresAt = (token) => {
 
 
 /**
- *
+ * helper function to get token from header
  * @param {*} req
  * @return {string | undefined} token || undefined
  */
 exports.getTokenFromHeader = (req) => {
     return req.headers?.authorization?.split(' ')[1]
+}
+
+
+/**
+ * helper function to get formatted user details response
+ * @param {*} user
+ * @return {*} user details response
+ */
+exports.getUserDetailsResponse = async (user) => {
+    const { id, firstName, lastName, userName, dob, gender, email, addresses } = user
+    const response = new UserDetailsResponse()
+    response.id = id
+    response.firstName = firstName ?? null
+    response.lastName = lastName ?? null
+    response.userName = userName ?? null
+    response.dob = dob ?? null
+    response.gender = gender
+    response.email = email
+    response.addresses = addresses
+
+    return response
 }
 

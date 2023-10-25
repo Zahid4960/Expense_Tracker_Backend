@@ -1,20 +1,24 @@
 const { responseFormatter } = require('../utility/response-formatter')
 const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../utility/response')
-const { getTokenFromHeader } = require('../helper/auth.helper')
-const { SuccessLoginPayload } = require('../payload/auth.payload')
+const { getTokenFromHeader, getUserDetailsResponse } = require('../helper/auth.helper')
+const { SuccessLoginResponse } = require('../response/auth.response')
 const {
     RegistrationDto,
     LoginDto,
     OtpDto,
     ForgotPasswordDto,
-    ChangePasswordDto
+    ChangePasswordDto,
+    UserProfileUpdateDto
 } = require('../dto/auth.dto')
 const {
     registration,
     login,
     verifyUserViaOtp,
     forgotPassword,
-    changePassword
+    changePassword,
+    userProfileUpdate,
+    userDetails,
+    userDelete
 } = require('../service/auth.service')
 const {
     loginRegistrationValidationSchema,
@@ -78,7 +82,7 @@ exports.loginPost = async (req, res) => {
 
         const user = await login(loginDto)
 
-        const payload = new SuccessLoginPayload()
+        const payload = new SuccessLoginResponse()
         payload.id = user._id
         payload.firstName = user.firstName ?? null
         payload.email = user.email
@@ -181,6 +185,71 @@ exports.changePasswordPost = async (req, res) => {
         await changePassword(dto, token)
 
         responseFormatter(res, new SuccessResponse(200, 'Password changed successfully!'))
+    }catch (e) {
+        console.error(e)
+        responseFormatter(res, new ExceptionResponse(e))
+    }
+}
+
+
+/**
+ * controller function for updating user profile
+ * @param {*} req
+ * @param {*} res
+ * @return {*} success response || error response || exception response
+ */
+exports.userUpdateProfilePatch = async (req, res) => {
+    try{
+        const userId = req.params.userId
+
+        const { firstName, lastName, userName, dob, gender } = req.body
+
+        const dto = new UserProfileUpdateDto()
+        dto.firstName = firstName
+        dto.lastName = lastName
+        dto.userName = userName
+        dto.dob = dob
+        dto.gender = gender
+
+        await userProfileUpdate(userId, dto)
+
+        responseFormatter(res, new SuccessResponse(200, 'User profile updated successfully!'))
+    }catch (e) {
+        console.error(e)
+        responseFormatter(res, new ExceptionResponse(e))
+    }
+}
+
+
+/**
+ * controller function to get user details
+ * @param {*} req
+ * @param {*} res
+ * @return {*} success response || error response || exception response
+ */
+exports.userGet = async (req, res) => {
+    try{
+        const userId = req.params.userId
+
+        const user = await userDetails(userId)
+
+        const response = await getUserDetailsResponse(user)
+
+        responseFormatter(res, new SuccessResponse(200, 'Found user details!', response))
+    }catch (e) {
+        console.error(e)
+        responseFormatter(res, new ExceptionResponse(e))
+    }
+}
+
+
+exports.userDelete = async (req, res) => {
+    try{
+        const userId = req.params.userId
+
+        await userDelete(userId)
+
+        responseFormatter(res, new SuccessResponse(200, 'User deleted successfully!'))
     }catch (e) {
         console.error(e)
         responseFormatter(res, new ExceptionResponse(e))
