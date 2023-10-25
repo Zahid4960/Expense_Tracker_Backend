@@ -1,5 +1,5 @@
 /**
- * class for success response
+ * utility  for success response
  */
 class SuccessResponse {
     constructor(statusCode, message, data) {
@@ -12,7 +12,7 @@ class SuccessResponse {
 
 
 /**
- * class for error response
+ * utility class for error response
  */
 class ErrorResponse extends SuccessResponse {
     constructor(statusCode, message) {
@@ -23,7 +23,7 @@ class ErrorResponse extends SuccessResponse {
 
 
 /**
- * class for exception response
+ * utility class for exception response
  */
 class ExceptionResponse {
     constructor(err) {

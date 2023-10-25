@@ -1,5 +1,5 @@
 /**
- * class to throw custom exception with statusCode & message
+ * utility class to throw custom exception with statusCode & message
  */
 class CustomException extends Error{
     constructor(statusCode, message) {

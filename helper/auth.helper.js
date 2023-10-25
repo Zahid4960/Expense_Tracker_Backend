@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const SuccessLoginPayload = require("../payload/success-login.payload")
-const { convertIsoDateTimeToUTCDateTime } = require('./common.helper')
+const { UserDetailsResponse } = require('../response/auth.response')
 
 
 /**
@@ -9,8 +8,8 @@ const { convertIsoDateTimeToUTCDateTime } = require('./common.helper')
  * @param {string} plainPassword
  * @return {string} encrypted password
  */
-exports.encryptPassword = (plainPassword) => {
-    return bcrypt.hash(plainPassword, parseInt(process.env.PASSWORD_SALT))
+exports.encryptPassword = async (plainPassword) => {
+    return await bcrypt.hash(plainPassword, parseInt(process.env.PASSWORD_SALT))
 }
 
 
@@ -27,26 +26,26 @@ exports.comparePassword = (plainPassword, encryptPassword) => {
 
 /**
  * helper function to generate OTP
- * @return {number} generated OTP
+ * @return {string} generated OTP
  */
 exports.generateOTP = () => {
-    return Math.floor(Math.random() * 10000)
+    const randomNumber = Math.floor(Math.random() * 10000)
+    return randomNumber.toString().padStart(4, '0')
 }
 
 
 /**
  * helper function to generate token
  * @param {*} payload
- * @param {string} jwtSecret
  * @param {boolean} isRemember
  * @return {string} jwt token
  */
-exports.generateToken = (payload, jwtSecret, isRemember = false) => {
+exports.generateToken = (payload, isRemember = false) => {
     const { email, password } = payload
 
     return jwt.sign(
         { email: email, password: password },
-        jwtSecret,
+        process.env.JWT_SECRET,
         isRemember === true ? { expiresIn: '24h'} : { expiresIn: '1h'}
     )
 }
@@ -68,22 +67,32 @@ exports.tokenExpiresAt = (token) => {
 
 
 /**
- * helper function to send back formatted success login response
- * @param {*} user
- * @param {string} email
- * @param {string} password
- * @param {boolean} isRemember
- * @return {*} formatted success login response
+ * helper function to get token from header
+ * @param {*} req
+ * @return {string | undefined} token || undefined
  */
-exports.formattedSuccessLoginResponse = (user, email, password, isRemember ) => {
-    const payload = new SuccessLoginPayload()
-    payload.id = user._id
-    payload.email = user.email
-    payload.firstName = user.firstName ?? null
-    payload.isRemember = isRemember
-    payload.token = this.generateToken({ email: user.email, password: password}, process.env.JWT_SECRET, isRemember)
-    payload.tokenExpiresAt = convertIsoDateTimeToUTCDateTime(this.tokenExpiresAt(payload.token))
+exports.getTokenFromHeader = (req) => {
+    return req.headers?.authorization?.split(' ')[1]
+}
 
-    return payload
+
+/**
+ * helper function to get formatted user details response
+ * @param {*} user
+ * @return {*} user details response
+ */
+exports.getUserDetailsResponse = async (user) => {
+    const { id, firstName, lastName, userName, dob, gender, email, addresses } = user
+    const response = new UserDetailsResponse()
+    response.id = id
+    response.firstName = firstName ?? null
+    response.lastName = lastName ?? null
+    response.userName = userName ?? null
+    response.dob = dob ?? null
+    response.gender = gender
+    response.email = email
+    response.addresses = addresses
+
+    return response
 }
 
