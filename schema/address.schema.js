@@ -9,7 +9,9 @@ const addressSchema = new Schema({
     country: { type: String, required: true },
     city: { type: String, required: true },
     state: { type: String },
-    postalCode: { type: String, required: true }
+    postalCode: { type: String, required: true },
+    isActive: { type: Boolean, default: true },
+    createdAt: { type: Date, default: Date.now() }
 })
 
 module.exports = addressSchema

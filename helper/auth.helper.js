@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { UserDetailsResponse } = require('../response/auth.response')
+const { UserDetailsResponse, AddressResponse } = require('../response/auth.response')
 
 
 /**
@@ -83,6 +83,7 @@ exports.getTokenFromHeader = (req) => {
  */
 exports.getUserDetailsResponse = async (user) => {
     const { id, firstName, lastName, userName, dob, gender, email, addresses } = user
+
     const response = new UserDetailsResponse()
     response.id = id
     response.firstName = firstName ?? null
@@ -91,7 +92,25 @@ exports.getUserDetailsResponse = async (user) => {
     response.dob = dob ?? null
     response.gender = gender
     response.email = email
-    response.addresses = addresses
+
+    if(addresses.length > 0){
+        addresses.map(item => {
+            addressesResponse = new AddressResponse()
+            addressesResponse.id = item.id
+            addressesResponse.address = item.address
+            addressesResponse.country = item.country
+            addressesResponse.city = item.city
+            addressesResponse.state = item.state
+            addressesResponse.postalCode = item.postalCode
+            addressesResponse.isActive = item.isActive
+            addressesResponse.createdAt = item.createdAt
+
+            response.addresses = addressesResponse
+        })
+    }
+    else{
+        response.addresses = addresses
+    }
 
     return response
 }

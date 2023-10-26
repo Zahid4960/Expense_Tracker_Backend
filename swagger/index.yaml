@@ -33,6 +33,9 @@ tags:
   - name: User
     description: API's for user module.
 
+  - name: Address
+    description: API's for address module.
+
 #############################################################################################################
 #                                      # User #
 #############################################################################################################
@@ -234,6 +237,136 @@ paths:
             $ref: "#/definitions/Success"
 
 
+############################################################################################################
+#                                     # Address #
+############################################################################################################
+  /user/{userId}/addresses:
+    get:
+      summary: "User addresses"
+      description: "Get user wise addresses"
+      tags:
+        - Address
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+      responses:
+        "200":
+          description: "Response after successfully getting user addresses"
+          schema:
+            $ref: "#/definitions/AddressResponse"
+
+    post:
+      summary: "Add user addresses"
+      description: "Add user wise addresses"
+      tags:
+        - Address
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+        - name: item
+          in: body
+          required: true
+          description: "Set request parameter to add user address"
+          schema:
+            $ref: "#/definitions/AddUserAddressObject"
+      responses:
+        "200":
+          description: "Success response after successfully adding user addresses"
+          schema:
+            $ref: "#/definitions/Success"
+
+  /user/{userId}/addresses/{addressId}:
+    get:
+      summary: "Get user wise a specific address"
+      description: "Get user wise a specific address"
+      tags:
+        - Address
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+        - name: addressId
+          in: path
+          required: true
+          type: string
+      responses:
+        "200":
+          description: "Response after successfully getting user wise a specific address"
+          schema:
+            $ref: "#/definitions/AddressObject"
+
+    patch:
+      summary: "Update user wise a specific address"
+      description: "Update user wise a specific address"
+      tags:
+        - Address
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+        - name: addressId
+          in: path
+          required: true
+          type: string
+        - name: item
+          in: body
+          required: true
+          description: "Set request parameter to update user address"
+          schema:
+            $ref: "#/definitions/UpdateUserAddressObject"
+      responses:
+        "200":
+          description: "Response after successfully updating user wise a specific address"
+          schema:
+            $ref: "#/definitions/Success"
+
+    delete:
+      summary: "Delete user wise a specific address"
+      description: "Delete user wise a specific address"
+      tags:
+        - Address
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+        - name: addressId
+          in: path
+          required: true
+          type: string
+      responses:
+        "200":
+          description: "Response after successfully deleting user wise a specific address"
+          schema:
+            $ref: "#/definitions/Success"
+
+
 ##############################################################################################################                                                                                                         #
 #                                     # Definitions #                                                                                                                                                                                                      #
 ##############################################################################################################
@@ -244,13 +377,13 @@ definitions:
     properties:
       statusCode:
         type: integer
-        default: 200
+        example: 200
       status:
         type: string
-        default: "success"
+        example: "success"
       message:
         type: string
-        default: "Success message"
+        example: "Success message"
 
   RegistrationObject:
     type: object
@@ -261,10 +394,10 @@ definitions:
     properties:
       email:
         type: string
-        default: "example@example.com"
+        example: "example@example.com"
       password:
         type: string
-        default: "password"
+        example: "password"
 
   LoginObject:
     type: object
@@ -276,10 +409,10 @@ definitions:
     properties:
       email:
         type: string
-        default: "example@example.com"
+        example: "example@example.com"
       password:
         type: string
-        default: "password"
+        example: "password"
       isRemember:
         type: boolean
         default: false
@@ -290,22 +423,22 @@ definitions:
     properties:
       id:
         type: string
-        default: "652fcc372b2f01d93d472ccb"
+        example: "652fcc372b2f01d93d472ccb"
       firstName:
         type: string
-        default: "firstName"
+        example: "firstName"
       email:
         type: string
-        default: "example@example.com"
+        example: "example@example.com"
       isRemember:
         type: boolean
         default: false
       token:
         type: string
-        default: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.............."
+        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.............."
       tokenExpiresAt:
         type: string
-        default: "2023-10-18 07:17:01 PM"
+        example: "2023-10-18 07:17:01 PM"
 
   UserVerificationObject:
     type: object
@@ -315,7 +448,7 @@ definitions:
     properties:
       otp:
         type: string
-        default: "1234"
+        example: "1234"
 
   ForgotPasswordObject:
     type: object
@@ -325,7 +458,7 @@ definitions:
     properties:
       newPassword:
         type: string
-        default: "password"
+        example: "password"
 
   PasswordChangeObject:
     type: object
@@ -336,10 +469,10 @@ definitions:
     properties:
       oldPassword:
         type: string
-        default: "oldPassword"
+        example: "oldPassword"
       newPassword:
         type: string
-        default: "newPassword"
+        example: "newPassword"
 
   UserProfileUpdateObject:
     type: object
@@ -347,16 +480,16 @@ definitions:
     properties:
       firstName:
         type: string
-        default: "first name"
+        example: "first name"
       lastName:
         type: string
-        default: "last name"
+        example: "last name"
       userName:
         type: string
-        default: "user name"
+        example: "user name"
       dob:
         type: string
-        default: "14-02-1997"
+        example: "14-02-1997"
       gender:
         type: string
         default: "Male"
@@ -367,58 +500,106 @@ definitions:
     properties:
       firstName:
         type: string
-        default: "first name"
+        example: "first name"
       lastName:
         type: string
-        default: "last name"
+        example: "last name"
       userName:
         type: string
-        default: "user name"
+        example: "user name"
       dob:
         type: string
-        default: "14-02-1997"
+        example: "14-02-1997"
       gender:
         type: string
         default: "Male"
       email:
         type: string
-        default: "example@example.com"
+        example: "example@example.com"
       addresses:
         type: array
         items:
-          $ref: "#/definitions/AddressResponse"
-#      expenseCategories:
-#        type: array
-#        items:
-#          $ref: "#/definitions/ExpenseCategoriesResponse"
+          $ref: "#/definitions/AddressObject"
 
-  AddressResponse:
+  AddressObject:
     type: object
     description: "Address Response"
     properties:
       address:
         type: string
-        default: "address"
+        example: "address"
       country:
         type: string
-        default: "country"
+        example: "country"
       city:
         type: string
-        default: "city"
+        example: "city"
       state:
         type: string
-        default: "state"
+        example: "state"
       postalCode:
         type: string
-        default: "5840"
+        example: "5840"
+      isActive:
+        type: boolean
+        default: true
+      createdAt:
+        type: string
+        example: "2023-10-18 07:17:01 PM"
 
-  ExpenseCategoriesResponse:
+  AddressResponse:
     type: object
-    description: "Expense Categories Response"
+    description: "Address Object"
     properties:
-      categoryName:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/AddressObject"
+
+  AddUserAddressObject:
+    type: object
+    description: "AddUser Address Object"
+    required:
+      - address
+      - country
+      - city
+      - postalCode
+    properties:
+      address:
         type: string
-        default: "category name"
-      description:
+        example: "address"
+      country:
         type: string
-        default: "description"
+        example: "country"
+      city:
+        type: string
+        example: "city"
+      state:
+        type: string
+        example: "state"
+      postalCode:
+        type: string
+        example: "5840"
+
+  UpdateUserAddressObject:
+    type: object
+    description: "Update UserAddress Object"
+    properties:
+      address:
+        type: string
+        example: "address"
+      country:
+        type: string
+        example: "country"
+      city:
+        type: string
+        example: "city"
+      state:
+        type: string
+        example: "state"
+      postalCode:
+        type: string
+        example: "5840"
+      isActive:
+        type: boolean
+        default: true
