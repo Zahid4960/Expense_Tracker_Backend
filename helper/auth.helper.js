@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { UserDetailsResponse, AddressResponse } = require('../response/auth.response')
+const { convertIsoDateTimeToUTCDateTime } = require('../helper/common.helper')
+const { UserDetailsResponse, SuccessLoginResponse} = require('../response/auth.response')
+const { AddressResponse } = require('../response/address.response')
 
 
 /**
@@ -77,11 +79,29 @@ exports.getTokenFromHeader = (req) => {
 
 
 /**
+ * helper function to get formatted response for success login
+ * @param {*} user
+ * @return {*} success login response
+ */
+exports.getSuccessLoginResponse = (user) => {
+    const response = new SuccessLoginResponse()
+    response.id = user._id
+    response.firstName = user.firstName ?? null
+    response.email = user.email
+    response.isRemember = user.isRemember
+    response.token = user.token
+    response.tokenExpiresAt = user.tokenExpiresAt
+
+    return response
+}
+
+
+/**
  * helper function to get formatted user details response
  * @param {*} user
  * @return {*} user details response
  */
-exports.getUserDetailsResponse = async (user) => {
+exports.getUserDetailsResponse = (user) => {
     const { id, firstName, lastName, userName, dob, gender, email, addresses } = user
 
     const response = new UserDetailsResponse()
@@ -95,7 +115,7 @@ exports.getUserDetailsResponse = async (user) => {
 
     if(addresses.length > 0){
         addresses.map(item => {
-            addressesResponse = new AddressResponse()
+            const addressesResponse = new AddressResponse()
             addressesResponse.id = item.id
             addressesResponse.address = item.address
             addressesResponse.country = item.country
@@ -103,13 +123,15 @@ exports.getUserDetailsResponse = async (user) => {
             addressesResponse.state = item.state
             addressesResponse.postalCode = item.postalCode
             addressesResponse.isActive = item.isActive
-            addressesResponse.createdAt = item.createdAt
+            addressesResponse.createdAt = convertIsoDateTimeToUTCDateTime(item.createdAt)
 
             response.addresses = addressesResponse
         })
+
+        response.addresses = addresses
     }
     else{
-        response.addresses = addresses
+        response.addresses = []
     }
 
     return response
