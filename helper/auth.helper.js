@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const { convertIsoDateTimeToUTCDateTime } = require('../helper/common.helper')
 const { UserDetailsResponse, SuccessLoginResponse} = require('../response/auth.response')
 const { AddressResponse } = require('../response/address.response')
 
@@ -122,13 +123,15 @@ exports.getUserDetailsResponse = (user) => {
             addressesResponse.state = item.state
             addressesResponse.postalCode = item.postalCode
             addressesResponse.isActive = item.isActive
-            addressesResponse.createdAt = item.createdAt
+            addressesResponse.createdAt = convertIsoDateTimeToUTCDateTime(item.createdAt)
 
             response.addresses = addressesResponse
         })
+
+        response.addresses = addresses
     }
     else{
-        response.addresses = addresses
+        response.addresses = []
     }
 
     return response

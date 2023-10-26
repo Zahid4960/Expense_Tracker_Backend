@@ -16,5 +16,6 @@ router.get(`/${prefix}/:userId`, verifyToken, verifyUserAccount, authController.
 router.delete(`/${prefix}/:userId`, verifyToken, verifyUserAccount, authController.userDelete)
 
 router.get(`/${prefix}/:userId/addresses`, verifyToken, verifyUserAccount, addressController.userAddressesGet)
+router.post(`/${prefix}/:userId/addresses`, verifyToken, verifyUserAccount, addressController.userAddressesPost)
 
 module.exports = router

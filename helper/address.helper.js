@@ -1,4 +1,5 @@
 const { AddressResponse } = require("../response/address.response")
+const { convertIsoDateTimeToUTCDateTime } = require('../helper/common.helper')
 
 
 /**
@@ -17,11 +18,9 @@ exports.getUserAddressesResponse = (addresses) => {
             addressesResponse.state = item.state
             addressesResponse.postalCode = item.postalCode
             addressesResponse.isActive = item.isActive
-            addressesResponse.createdAt = item.createdAt
-
-            return addressesResponse
+            addressesResponse.createdAt = convertIsoDateTimeToUTCDateTime(item.createdAt)
         })
     }
 
-    return []
+    return addresses
 }
