@@ -1,7 +1,6 @@
 const { responseFormatter } = require('../utility/response-formatter')
 const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../utility/response')
-const { getTokenFromHeader, getUserDetailsResponse } = require('../helper/auth.helper')
-const { SuccessLoginResponse } = require('../response/auth.response')
+const { getTokenFromHeader, getSuccessLoginResponse, getUserDetailsResponse } = require('../helper/auth.helper')
 const {
     RegistrationDto,
     LoginDto,
@@ -82,15 +81,9 @@ exports.loginPost = async (req, res) => {
 
         const user = await login(loginDto)
 
-        const payload = new SuccessLoginResponse()
-        payload.id = user._id
-        payload.firstName = user.firstName ?? null
-        payload.email = user.email
-        payload.isRemember = user.isRemember
-        payload.token = user.token
-        payload.tokenExpiresAt = user.tokenExpiresAt
+        const response = await getSuccessLoginResponse(user)
 
-        responseFormatter(res, new SuccessResponse(200, 'Login successful!', payload))
+        responseFormatter(res, new SuccessResponse(200, 'Login successful!', response))
     }catch (e) {
         console.error(e)
         responseFormatter(res, new ExceptionResponse(e))
@@ -243,6 +236,12 @@ exports.userGet = async (req, res) => {
 }
 
 
+/**
+ * controller function to user delete
+ * @param {*} req
+ * @param {*} res
+ * @return {*} success response || error response || exception response
+ */
 exports.userDelete = async (req, res) => {
     try{
         const userId = req.params.userId
