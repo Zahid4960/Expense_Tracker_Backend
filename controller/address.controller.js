@@ -1,6 +1,6 @@
 const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../utility/response')
 const { responseFormatter } = require('../utility/response-formatter')
-const { userAddresses, userAddress } = require('../service/address.service')
+const { userAddresses, userAddress, addressByAddressId } = require('../service/address.service')
 const { getUserAddressesResponse } = require('../helper/address.helper')
 const { UserAddressDto } = require('../dto/address.dto')
 
@@ -49,6 +49,28 @@ exports.userAddressesPost = async (req, res) => {
         await userAddress(userId, dto)
 
         responseFormatter(res, new SuccessResponse(200, 'User addresses added successfully!'))
+    }catch (e) {
+        console.error(e)
+        responseFormatter(res, new ExceptionResponse(e))
+    }
+}
+
+
+/**
+ * controller function to get user wise address wise address
+ * @param {*} req
+ * @param {*} res
+ * @return {*} SuccessResponse || ErrorResponse || ExceptionResponse
+ */
+exports.addressByAddressIdGet = async (req, res) => {
+    try{
+        const { userId, addressId } = req.params
+
+        const address = await addressByAddressId(userId, addressId)
+
+        console.log(address)
+
+        responseFormatter(res, new SuccessResponse(200, 'Address found!', address))
     }catch (e) {
         console.error(e)
         responseFormatter(res, new ExceptionResponse(e))
