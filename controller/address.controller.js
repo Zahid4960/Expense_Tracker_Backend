@@ -1,8 +1,14 @@
 const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../utility/response')
 const { responseFormatter } = require('../utility/response-formatter')
-const { userAddresses, userAddress, addressByAddressId } = require('../service/address.service')
 const { getUserAddressesResponse } = require('../helper/address.helper')
-const { UserAddressDto } = require('../dto/address.dto')
+const { UserAddressDto, UpdateAddressDto } = require('../dto/address.dto')
+const {
+    userAddresses,
+    userAddress,
+    addressByAddressId,
+    updateAddress,
+    addressDelete
+} = require('../service/address.service')
 
 
 /**
@@ -68,9 +74,45 @@ exports.addressByAddressIdGet = async (req, res) => {
 
         const address = await addressByAddressId(userId, addressId)
 
-        console.log(address)
-
         responseFormatter(res, new SuccessResponse(200, 'Address found!', address))
+    }catch (e) {
+        console.error(e)
+        responseFormatter(res, new ExceptionResponse(e))
+    }
+}
+
+
+/**
+ * controller function to update address
+ * @param {*} req
+ * @param {*} res
+ * @return {*} SuccessResponse || ExceptionResponse
+ */
+exports.updateAddressPatch = async (req, res) => {
+    try{
+        const { userId, addressId } = req.params
+
+        const { address, country, city, state, postalCode, isActive } = req.body
+
+        const dto = new UpdateAddressDto(address, country, city, state, postalCode, isActive)
+
+        await updateAddress(userId, addressId, dto)
+
+        responseFormatter(res, new SuccessResponse(200, 'Address updated successfully!'))
+    }catch (e) {
+        console.error(e)
+        responseFormatter(res, new ExceptionResponse(e))
+    }
+}
+
+
+exports.addressDelete = async (req, res) => {
+    try {
+        const { userId, addressId } = req.params
+
+        await addressDelete(userId, addressId)
+
+        responseFormatter(res, new SuccessResponse(200, 'Address deleted successfully!'))
     }catch (e) {
         console.error(e)
         responseFormatter(res, new ExceptionResponse(e))

@@ -11,6 +11,18 @@ class UserAddressDto {
     }
 }
 
+
+/**
+ * dto class for update address
+ */
+class UpdateAddressDto extends UserAddressDto{
+    constructor(address,country, city, state, postalCode, isActive) {
+        super(address,country, city, state, postalCode)
+        this.isActive = isActive
+    }
+}
+
 module.exports = {
-    UserAddressDto
+    UserAddressDto,
+    UpdateAddressDto
 }
