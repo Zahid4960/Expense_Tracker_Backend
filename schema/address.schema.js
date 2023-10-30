@@ -11,7 +11,8 @@ const addressSchema = new Schema({
     state: { type: String },
     postalCode: { type: String, required: true },
     isActive: { type: Boolean, default: true },
-    createdAt: { type: Date, default: Date.now() }
+    createdAt: { type: Date, default: Date.now() },
+    deletedAt: { type: Date }
 })
 
 module.exports = addressSchema

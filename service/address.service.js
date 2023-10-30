@@ -1,6 +1,5 @@
-const { getUserById } = require('../repository/auth.repo')
 const CustomException = require('../utility/custom-exception')
-const UserModel = require('../model/user.model')
+const { getUserById, getUserByFilters, updateUserByFilters } = require('../repository/auth.repo')
 
 
 /**
@@ -78,13 +77,13 @@ exports.addressByAddressId = async (userId, addressId) => {
  * @return {*} exception || void
  */
 exports.updateAddress = async (userId, addressId, payload) => {
-    const user = await getUserById(userId)
+    const filters = { '_id': userId, 'addresses._id': addressId }
+
+    const user = await getUserByFilters(filters)
 
     if(user === null){
         throw new CustomException(404, 'User not found!')
     }
-
-    const filters = { '_id': userId, 'addresses._id': addressId }
 
     const updatedAddress = {
         $set: {
@@ -97,5 +96,24 @@ exports.updateAddress = async (userId, addressId, payload) => {
         }
     }
 
-    await UserModel.updateOne(filters, updatedAddress)
+    await updateUserByFilters(filters, updatedAddress)
+}
+
+
+exports.addressDelete = async (userId, addressId) => {
+    const filters = { '_id': userId, 'addresses._id': addressId }
+
+    const user = await getUserByFilters(filters)
+
+    if(user === null){
+        throw new CustomException(404, 'User not found!')
+    }
+
+    const deleteAddress = {
+        $set: {
+            'addresses.$.deletedAt': Date.now()
+        }
+    }
+
+    await updateUserByFilters(filters, deleteAddress)
 }

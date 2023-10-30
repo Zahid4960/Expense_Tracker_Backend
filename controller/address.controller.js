@@ -6,7 +6,8 @@ const {
     userAddresses,
     userAddress,
     addressByAddressId,
-    updateAddress
+    updateAddress,
+    addressDelete
 } = require('../service/address.service')
 
 
@@ -81,6 +82,12 @@ exports.addressByAddressIdGet = async (req, res) => {
 }
 
 
+/**
+ * controller function to update address
+ * @param {*} req
+ * @param {*} res
+ * @return {*} SuccessResponse || ExceptionResponse
+ */
 exports.updateAddressPatch = async (req, res) => {
     try{
         const { userId, addressId } = req.params
@@ -92,6 +99,20 @@ exports.updateAddressPatch = async (req, res) => {
         await updateAddress(userId, addressId, dto)
 
         responseFormatter(res, new SuccessResponse(200, 'Address updated successfully!'))
+    }catch (e) {
+        console.error(e)
+        responseFormatter(res, new ExceptionResponse(e))
+    }
+}
+
+
+exports.addressDelete = async (req, res) => {
+    try {
+        const { userId, addressId } = req.params
+
+        await addressDelete(userId, addressId)
+
+        responseFormatter(res, new SuccessResponse(200, 'Address deleted successfully!'))
     }catch (e) {
         console.error(e)
         responseFormatter(res, new ExceptionResponse(e))
