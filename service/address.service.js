@@ -1,5 +1,6 @@
 const { getUserById } = require('../repository/auth.repo')
 const CustomException = require('../utility/custom-exception')
+const UserModel = require('../model/user.model')
 
 
 /**
@@ -66,4 +67,35 @@ exports.addressByAddressId = async (userId, addressId) => {
     }
 
     return address
+}
+
+
+/**
+ * service function to update address
+ * @param {string} userId
+ * @param {string} addressId
+ * @param {*} payload
+ * @return {*} exception || void
+ */
+exports.updateAddress = async (userId, addressId, payload) => {
+    const user = await getUserById(userId)
+
+    if(user === null){
+        throw new CustomException(404, 'User not found!')
+    }
+
+    const filters = { '_id': userId, 'addresses._id': addressId }
+
+    const updatedAddress = {
+        $set: {
+            'addresses.$.address': payload.address,
+            'addresses.$.country': payload.country,
+            'addresses.$.city': payload.city,
+            'addresses.$.state': payload.state,
+            'addresses.$.postalCode': payload.postalCode,
+            'addresses.$.isActive': payload.isActive
+        }
+    }
+
+    await UserModel.updateOne(filters, updatedAddress)
 }
