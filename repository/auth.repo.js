@@ -75,3 +75,24 @@ exports.getUserInfoFromToken = async (token) => {
 
     return null
 }
+
+
+/**
+ * repository function to get user by using filters
+ * @param {*} filters
+ * @return {*} user information after filtering
+ */
+exports.getUserByFilters = async (filters) => {
+    return await UserModel.findOne(filters)
+}
+
+
+/**
+ * repository function to update user information by using filters & data to update
+ * @param filters
+ * @param dataToUpdate
+ * @return {*} void
+ */
+exports.updateUserByFilters = async (filters, dataToUpdate) => {
+    await UserModel.updateOne(filters, dataToUpdate)
+}

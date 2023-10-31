@@ -27,6 +27,7 @@ class UserDetailsResponse extends SuccessLoginResponse{
     }
 }
 
+
 module.exports = {
     SuccessLoginResponse,
     UserDetailsResponse
