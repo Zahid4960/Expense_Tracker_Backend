@@ -1,5 +1,9 @@
 const CustomException = require('../utility/custom-exception')
-const { getUserById, getUserByFilters, updateUserByFilters } = require('../repository/auth.repo')
+const {
+    getUserById,
+    getUserByFilters,
+    updateUserByFilters
+} = require('../repository/auth.repo')
 
 
 /**
@@ -8,13 +12,16 @@ const { getUserById, getUserByFilters, updateUserByFilters } = require('../repos
  * @return {*} user addresses || [] || CustomException
  */
 exports.userAddresses = async (userId) => {
+
     const user = await getUserById(userId)
 
     if(user === null){
         throw new CustomException(404, 'User not found!')
     }
 
-    return user.addresses
+    const address = user.addresses.filter(item => item.isActive === undefined)
+
+    return address
 }
 
 
@@ -100,6 +107,12 @@ exports.updateAddress = async (userId, addressId, payload) => {
 }
 
 
+/**
+ *
+ * @param {string} userId
+ * @param {string} addressId
+ * @return {} exception || void
+ */
 exports.addressDelete = async (userId, addressId) => {
     const filters = { '_id': userId, 'addresses._id': addressId }
 
