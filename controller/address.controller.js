@@ -106,6 +106,12 @@ exports.updateAddressPatch = async (req, res) => {
 }
 
 
+/**
+ * controller function for delete address
+ * @param {*} req
+ * @param {*} res
+ * @return {*} SuccessResponse || ExceptionResponse
+ */
 exports.addressDelete = async (req, res) => {
     try {
         const { userId, addressId } = req.params
