@@ -420,6 +420,85 @@ paths:
           schema:
             $ref: "#/definitions/Success"
 
+  /user/{userId}/expense-categories/{expenseCategoryId}:
+    get:
+      summary: "Get user wise a specific expense category"
+      description: "Get user wise a specific expense category"
+      tags:
+        - Expense Category
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+        - name: expenseCategoryId
+          in: path
+          required: true
+          type: string
+      responses:
+        "200":
+          description: "Response after successfully getting user wise a specific expense category"
+          schema:
+            $ref: "#/definitions/ExpenseCategoriesObject"
+
+    patch:
+      summary: "Update user wise a specific expense category"
+      description: "Update user wise a specific expense category"
+      tags:
+        - Expense Category
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+        - name: expenseCategoryId
+          in: path
+          required: true
+          type: string
+        - name: item
+          in: body
+          required: true
+          description: "Set request parameter to update user expense category"
+          schema:
+            $ref: "#/definitions/UpdateExpenseCategoryObject"
+      responses:
+        "200":
+          description: "Response after successfully updating user wise a specific expense category"
+          schema:
+            $ref: "#/definitions/Success"
+
+    delete:
+      summary: "Delete user wise a specific expense category"
+      description: "Delete user wise a specific expense category"
+      tags:
+        - Expense Category
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+        - name: expenseCategoryId
+          in: path
+          required: true
+          type: string
+      responses:
+        "200":
+          description: "Response after successfully deleting user wise a expense category"
+          schema:
+            $ref: "#/definitions/Success"
+
 ##############################################################################################################                                                                                                         #
 #                                     # Definitions #                                                                                                                                                                                                      #
 ##############################################################################################################
@@ -689,6 +768,9 @@ definitions:
   AddUserExpenseCategoryObject:
     type: object
     description: "AddUser Expense Category Object"
+    required:
+      - categoryName
+      - categoryDescription
     properties:
       categoryName:
         type: string
@@ -696,3 +778,21 @@ definitions:
       categoryDescription:
         type: string
         example: "Description of expense category"
+
+  UpdateExpenseCategoryObject:
+    type: object
+    description: "Update Expense Category Object"
+    required:
+      - categoryName
+      - categoryDescription
+      - isActive
+    properties:
+      categoryName:
+        type: string
+        example: "Rent"
+      categoryDescription:
+        type: string
+        example: "Description of expense category"
+      isActive:
+        type: boolean
+        default: true
