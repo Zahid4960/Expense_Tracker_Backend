@@ -1,24 +1,35 @@
 const { ExpenseCategories } = require('../response/expense-category.response')
+const { convertIsoDateTimeToUTCDateTime } = require('../helper/common.helper')
 
 
 /**
  * helper function to get formatted expense categories
- * @param { Array } expenseCategories
- * @return { Array || [] }
+ * @param {Array | Object} expenseCategories
+ * @return {Array | Object}
  */
 exports.formattedExpenseCategories = (expenseCategories) => {
     if(expenseCategories?.length > 0){
-        expenseCategories.map(expCat => {
-            const response = new ExpenseCategories()
-            response.id = expCat.id
-            response.categoryName = expCat.categoryName
-            response.categoryDescription = expCat.categoryDescription
-            response.isActive = expCat.isActive
-            response.createdAt = expCat.createdAt
+         return expenseCategories.map(expCat => {
+            return formatExpenseCategory(expCat)
         })
-
-        return expenseCategories
+    }else{
+        return formatExpenseCategory(expenseCategories)
     }
+}
 
-    return []
+
+/**
+ * helper function to format expense category
+ * @param {Object} expCatObj
+ * @return {Object}
+ */
+const formatExpenseCategory = (expCatObj) => {
+    const response = new ExpenseCategories()
+    response.id = expCatObj.id
+    response.categoryName = expCatObj.categoryName
+    response.categoryDescription = expCatObj.categoryDescription
+    response.isActive = expCatObj.isActive
+    response.createdAt = convertIsoDateTimeToUTCDateTime(expCatObj.createdAt)
+
+    return response
 }

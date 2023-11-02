@@ -3,7 +3,7 @@ const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../utilit
 const { AddExpenseCategoryDto } = require('../dto/expense-category.dto')
 const { formattedExpenseCategories } = require('../helper/expense-category.helper')
 const { addExpenseCategoryValidationSchema } = require('../validation/expense-category.validation')
-const { expenseCategories, addExpenseCategory } = require('../service/expense-category.service')
+const { expenseCategories, addExpenseCategory, expenseCategoryDetails } = require('../service/expense-category.service')
 
 
 /**
@@ -51,6 +51,29 @@ exports.addExpenseCategoriesPost = async (req, res) => {
         await addExpenseCategory(userId, dataToAdd)
 
         responseFormatter(res, new SuccessResponse(200, 'Expense categories added successfully!'))
+    }catch (e) {
+        console.error(e)
+        responseFormatter(res, new ExceptionResponse(e))
+    }
+}
+
+
+/**
+ * controller function to get details of expense category
+ * @param {*} req
+ * @param {*} res
+ * @return {Object}
+ */
+exports.expenseCategoryDetailsGet = async (req, res) => {
+    try {
+        const userId = req.params.userId
+        const expenseCategoryId = req.params.expenseCategoryId
+
+        const data = await expenseCategoryDetails(userId, expenseCategoryId)
+
+        const formattedResponse = await formattedExpenseCategories(data)
+
+        responseFormatter(res, new SuccessResponse(200, 'Expense category found!', formattedResponse))
     }catch (e) {
         console.error(e)
         responseFormatter(res, new ExceptionResponse(e))

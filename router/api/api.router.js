@@ -24,5 +24,6 @@ router.delete(`/${prefix}/:userId/addresses/:addressId`, verifyToken, verifyUser
 
 router.get(`/${prefix}/:userId/expense-categories`, verifyToken, verifyUserAccount, expenseCategoryController.expenseCategoriesGet)
 router.post(`/${prefix}/:userId/expense-categories`, verifyToken, verifyUserAccount, expenseCategoryController.addExpenseCategoriesPost)
+router.get(`/${prefix}/:userId/expense-categories/:expenseCategoryId`, verifyToken, verifyUserAccount, expenseCategoryController.expenseCategoryDetailsGet)
 
 module.exports = router

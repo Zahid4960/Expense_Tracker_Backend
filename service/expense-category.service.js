@@ -1,5 +1,5 @@
 const CustomException = require('../utility/custom-exception')
-const { getUserById } = require('../repository/auth.repo')
+const { getUserById, getUserByFilters } = require('../repository/auth.repo')
 
 
 /**
@@ -50,4 +50,27 @@ exports.addExpenseCategory = async (userId, expenseCategory) => {
     }else{
         throw new CustomException(409, `${categoryName} already exist!`)
     }
+}
+
+
+/**
+ * service function to get expense category details
+ * @param {string} userId
+ * @param {string} expCatId
+ * @return {Object}
+ */
+exports.expenseCategoryDetails = async (userId, expCatId) => {
+    const user = await getUserById(userId)
+
+    if(user === null){
+        throw new CustomException(404, 'User not found!')
+    }
+
+    const expCat = user.expenseCategories.find(item => item.id === expCatId)
+
+    if(expCat === undefined){
+        throw new CustomException(404, 'Expense category not found!')
+    }
+
+    return expCat
 }
