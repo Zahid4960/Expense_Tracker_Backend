@@ -3,6 +3,7 @@ const router = express.Router()
 const { verifyToken, verifyUserAccount } = require('../../middleware/auth.middleware')
 const authController = require('../../controller/auth.controller')
 const addressController = require('../../controller/address.controller')
+const expenseCategoryController = require('../../controller/expense-category.controller')
 
 
 const prefix = 'user'
@@ -20,5 +21,7 @@ router.post(`/${prefix}/:userId/addresses`, verifyToken, verifyUserAccount, addr
 router.get(`/${prefix}/:userId/addresses/:addressId`, verifyToken, verifyUserAccount, addressController.addressByAddressIdGet)
 router.patch(`/${prefix}/:userId/addresses/:addressId`, verifyToken, verifyUserAccount, addressController.updateAddressPatch)
 router.delete(`/${prefix}/:userId/addresses/:addressId`, verifyToken, verifyUserAccount, addressController.addressDelete)
+
+router.get(`/${prefix}/:userId/expense-categories`, verifyToken, verifyUserAccount, expenseCategoryController.expenseCategoriesGet)
 
 module.exports = router

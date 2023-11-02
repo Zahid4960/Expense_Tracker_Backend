@@ -19,9 +19,11 @@ exports.userAddresses = async (userId) => {
         throw new CustomException(404, 'User not found!')
     }
 
-    const address = user.addresses.filter(item => item.isActive === undefined)
+    if(user.addresses?.length > 0){
+        return user.addresses.filter(item => item.isActive === true)
+    }
 
-    return address
+    return []
 }
 
 
