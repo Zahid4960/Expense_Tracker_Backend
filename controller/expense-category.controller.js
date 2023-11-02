@@ -2,6 +2,7 @@ const { responseFormatter } = require('../utility/response-formatter')
 const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../utility/response')
 const { AddExpenseCategoryDto } = require('../dto/expense-category.dto')
 const { formattedExpenseCategories } = require('../helper/expense-category.helper')
+const { addExpenseCategoryValidationSchema } = require('../validation/expense-category.validation')
 const { expenseCategories, addExpenseCategory } = require('../service/expense-category.service')
 
 
@@ -40,6 +41,12 @@ exports.addExpenseCategoriesPost = async (req, res) => {
         const { categoryName, categoryDescription } = req.body
 
         const dataToAdd = new AddExpenseCategoryDto(categoryName, categoryDescription)
+
+        const { error } = addExpenseCategoryValidationSchema.validate(dataToAdd)
+
+        if(error){
+            responseFormatter(res, new ErrorResponse(400, error.details[0].message))
+        }
 
         await addExpenseCategory(userId, dataToAdd)
 

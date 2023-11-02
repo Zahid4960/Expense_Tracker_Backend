@@ -16,11 +16,9 @@ exports.expenseCategories = async (userId) => {
 
     if(user.expenseCategories?.length > 0){
         return user.expenseCategories.filter(item => item.isActive === true)
-    }else{
-        return []
     }
 
-
+    return []
 }
 
 
@@ -39,11 +37,17 @@ exports.addExpenseCategory = async (userId, expenseCategory) => {
         throw new CustomException(404, 'User not found!')
     }
 
-    const dataToAdd = {
-        categoryName,
-        categoryDescription
-    }
+    const isExpCatAlreadyExist = user.expenseCategories.find(item => item.categoryName === categoryName)
 
-    user.expenseCategories.push(dataToAdd)
-    await user.save()
+    if(isExpCatAlreadyExist === undefined){
+        const dataToAdd = {
+            categoryName,
+            categoryDescription
+        }
+
+        user.expenseCategories.push(dataToAdd)
+        await user.save()
+    }else{
+        throw new CustomException(409, `${categoryName} already exist!`)
+    }
 }
