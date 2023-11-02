@@ -23,5 +23,6 @@ router.patch(`/${prefix}/:userId/addresses/:addressId`, verifyToken, verifyUserA
 router.delete(`/${prefix}/:userId/addresses/:addressId`, verifyToken, verifyUserAccount, addressController.addressDelete)
 
 router.get(`/${prefix}/:userId/expense-categories`, verifyToken, verifyUserAccount, expenseCategoryController.expenseCategoriesGet)
+router.post(`/${prefix}/:userId/expense-categories`, verifyToken, verifyUserAccount, expenseCategoryController.addExpenseCategoriesPost)
 
 module.exports = router

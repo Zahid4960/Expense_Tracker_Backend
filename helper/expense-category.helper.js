@@ -15,9 +15,9 @@ exports.formattedExpenseCategories = (expenseCategories) => {
             response.categoryDescription = expCat.categoryDescription
             response.isActive = expCat.isActive
             response.createdAt = expCat.createdAt
-
-            return response
         })
+
+        return expenseCategories
     }
 
     return []

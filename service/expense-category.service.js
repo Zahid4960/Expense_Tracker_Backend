@@ -8,7 +8,7 @@ const { getUserById } = require('../repository/auth.repo')
  * @return {*} expense categories || CustomException || []
  */
 exports.expenseCategories = async (userId) => {
-    const user = getUserById(userId)
+    const user = await getUserById(userId)
 
     if(user === null){
         throw new CustomException(404, 'User not found!')
@@ -16,7 +16,34 @@ exports.expenseCategories = async (userId) => {
 
     if(user.expenseCategories?.length > 0){
         return user.expenseCategories.filter(item => item.isActive === true)
+    }else{
+        return []
     }
 
-    return []
+
+}
+
+
+/**
+ * service function to add user expense category
+ * @param {string} userId
+ * @param {Object} expenseCategory
+ * @return {Promise<void>}
+ */
+exports.addExpenseCategory = async (userId, expenseCategory) => {
+    const user = await getUserById(userId)
+
+    const { categoryName, categoryDescription } = expenseCategory
+
+    if(user === null){
+        throw new CustomException(404, 'User not found!')
+    }
+
+    const dataToAdd = {
+        categoryName,
+        categoryDescription
+    }
+
+    user.expenseCategories.push(dataToAdd)
+    await user.save()
 }
