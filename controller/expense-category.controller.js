@@ -1,9 +1,18 @@
 const { responseFormatter } = require('../utility/response-formatter')
 const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../utility/response')
-const { AddExpenseCategoryDto } = require('../dto/expense-category.dto')
+const { AddExpenseCategoryDto, UpdateExpenseCategoryDto } = require('../dto/expense-category.dto')
 const { formattedExpenseCategories } = require('../helper/expense-category.helper')
-const { addExpenseCategoryValidationSchema } = require('../validation/expense-category.validation')
-const { expenseCategories, addExpenseCategory, expenseCategoryDetails } = require('../service/expense-category.service')
+const {
+    addExpenseCategoryValidationSchema,
+    updateExpenseCategoryValidationSchema
+} = require('../validation/expense-category.validation')
+const {
+    expenseCategories,
+    addExpenseCategory,
+    expenseCategoryDetails,
+    updateExpenseCategory,
+    deleteExpenseCategory
+} = require('../service/expense-category.service')
 
 
 /**
@@ -74,6 +83,56 @@ exports.expenseCategoryDetailsGet = async (req, res) => {
         const formattedResponse = await formattedExpenseCategories(data)
 
         responseFormatter(res, new SuccessResponse(200, 'Expense category found!', formattedResponse))
+    }catch (e) {
+        console.error(e)
+        responseFormatter(res, new ExceptionResponse(e))
+    }
+}
+
+
+/**
+ * controller function to update expense category
+ * @param req
+ * @param res
+ * @return {Promise<void>}
+ */
+exports.expenseCategoryUpdatePatch = async (req, res) => {
+    try{
+        const { userId, expenseCategoryId } = req.params
+
+        const { categoryName, categoryDescription, isActive } = req.body
+
+        const dto = new UpdateExpenseCategoryDto(categoryName, categoryDescription, isActive)
+
+        const { error } = updateExpenseCategoryValidationSchema.validate(dto)
+
+        if(error){
+            responseFormatter(res, new ErrorResponse(400, error.details[0].message))
+        }
+
+        await updateExpenseCategory(userId, expenseCategoryId, dto)
+
+        responseFormatter(res, new SuccessResponse(200, 'Expense categories updated successfully!'))
+    }catch (e) {
+        console.error(e)
+        responseFormatter(res, new ExceptionResponse(e))
+    }
+}
+
+
+/**
+ * controller function to delete an expense category
+ * @param req
+ * @param res
+ * @return {Promise<void>}
+ */
+exports.expenseCategoryDelete = async (req, res) => {
+    try {
+        const { userId, expenseCategoryId } = req.params
+
+        await deleteExpenseCategory(userId, expenseCategoryId)
+
+        responseFormatter(res, new SuccessResponse(200, 'Expense categories deleted successfully!'))
     }catch (e) {
         console.error(e)
         responseFormatter(res, new ExceptionResponse(e))

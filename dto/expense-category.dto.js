@@ -8,6 +8,15 @@ class AddExpenseCategoryDto {
     }
 }
 
+
+class UpdateExpenseCategoryDto extends AddExpenseCategoryDto {
+    constructor(categoryName, categoryDescription, isActive) {
+        super(categoryName, categoryDescription)
+        this.isActive = isActive
+    }
+}
+
 module.exports = {
-    AddExpenseCategoryDto
+    AddExpenseCategoryDto,
+    UpdateExpenseCategoryDto
 }
