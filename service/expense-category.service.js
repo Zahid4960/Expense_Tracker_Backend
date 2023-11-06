@@ -98,6 +98,28 @@ exports.updateExpenseCategory = async (userId, expenseCategoryId, payload) => {
 
 
 /**
+ * service function to delete an expense category
+ * @param {string} userId
+ * @param {string} expenseCategoryId
+ */
+exports.deleteExpenseCategory = async (userId, expenseCategoryId) => {
+    const user = await checkUserExistOrNot(userId)
+
+    await checkExpenseCategoryExistOrNot(user, expenseCategoryId)
+
+    const filters = { '_id': userId, 'expenseCategories._id': expenseCategoryId }
+
+    const dataToDelete = {
+        $set: {
+            'expenseCategories.$.isActive': false,
+        }
+    }
+
+    await updateUserByFilters(filters, dataToDelete)
+}
+
+
+/**
  * function to check valid user exist or not by userId
  * @param {string} userId
  * @return {Object}

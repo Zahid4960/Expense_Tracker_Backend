@@ -10,7 +10,8 @@ const {
     expenseCategories,
     addExpenseCategory,
     expenseCategoryDetails,
-    updateExpenseCategory
+    updateExpenseCategory,
+    deleteExpenseCategory
 } = require('../service/expense-category.service')
 
 
@@ -112,6 +113,26 @@ exports.expenseCategoryUpdatePatch = async (req, res) => {
         await updateExpenseCategory(userId, expenseCategoryId, dto)
 
         responseFormatter(res, new SuccessResponse(200, 'Expense categories updated successfully!'))
+    }catch (e) {
+        console.error(e)
+        responseFormatter(res, new ExceptionResponse(e))
+    }
+}
+
+
+/**
+ * controller function to delete an expense category
+ * @param req
+ * @param res
+ * @return {Promise<void>}
+ */
+exports.expenseCategoryDelete = async (req, res) => {
+    try {
+        const { userId, expenseCategoryId } = req.params
+
+        await deleteExpenseCategory(userId, expenseCategoryId)
+
+        responseFormatter(res, new SuccessResponse(200, 'Expense categories deleted successfully!'))
     }catch (e) {
         console.error(e)
         responseFormatter(res, new ExceptionResponse(e))

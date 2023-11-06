@@ -38,5 +38,6 @@ router.get(`/${prefix}/:userId/expense-categories`, verifyToken, verifyUserAccou
 router.post(`/${prefix}/:userId/expense-categories`, verifyToken, verifyUserAccount, expenseCategoryController.addExpenseCategoriesPost)
 router.get(`/${prefix}/:userId/expense-categories/:expenseCategoryId`, verifyToken, verifyUserAccount, expenseCategoryController.expenseCategoryDetailsGet)
 router.patch(`/${prefix}/:userId/expense-categories/:expenseCategoryId`, verifyToken, verifyUserAccount, expenseCategoryController.expenseCategoryUpdatePatch)
+router.delete(`/${prefix}/:userId/expense-categories/:expenseCategoryId`, verifyToken, verifyUserAccount, expenseCategoryController.expenseCategoryDelete)
 
 module.exports = router
