@@ -36,6 +36,9 @@ tags:
   - name: Address
     description: API's for address module.
 
+  - name: Expense Category
+    description: API's for expense category module.
+
 #############################################################################################################
 #                                      # User #
 #############################################################################################################
@@ -367,6 +370,135 @@ paths:
             $ref: "#/definitions/Success"
 
 
+#############################################################################################################
+#                                     # Expense Category #
+#############################################################################################################
+  /user/{userId}/expense-categories:
+    get:
+      summary: "User expense categories"
+      description: "Get user wise expense categories"
+      tags:
+        - Expense Category
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+      responses:
+        "200":
+          description: "Response after successfully getting user expense categories"
+          schema:
+            $ref: "#/definitions/ExpenseCategoriesResponse"
+
+    post:
+      summary: "User expense categories"
+      description: "Add user wise expense categories"
+      tags:
+        - Expense Category
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+        - name: item
+          in: body
+          required: true
+          description: "Set request parameter to add user expense category"
+          schema:
+            $ref: "#/definitions/AddUserExpenseCategoryObject"
+      responses:
+        "200":
+          description: "Response after successfully adding user expense category"
+          schema:
+            $ref: "#/definitions/Success"
+
+  /user/{userId}/expense-categories/{expenseCategoryId}:
+    get:
+      summary: "Get user wise a specific expense category"
+      description: "Get user wise a specific expense category"
+      tags:
+        - Expense Category
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+        - name: expenseCategoryId
+          in: path
+          required: true
+          type: string
+      responses:
+        "200":
+          description: "Response after successfully getting user wise a specific expense category"
+          schema:
+            $ref: "#/definitions/ExpenseCategoriesObject"
+
+    patch:
+      summary: "Update user wise a specific expense category"
+      description: "Update user wise a specific expense category"
+      tags:
+        - Expense Category
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+        - name: expenseCategoryId
+          in: path
+          required: true
+          type: string
+        - name: item
+          in: body
+          required: true
+          description: "Set request parameter to update user expense category"
+          schema:
+            $ref: "#/definitions/UpdateExpenseCategoryObject"
+      responses:
+        "200":
+          description: "Response after successfully updating user wise a specific expense category"
+          schema:
+            $ref: "#/definitions/Success"
+
+    delete:
+      summary: "Delete user wise a specific expense category"
+      description: "Delete user wise a specific expense category"
+      tags:
+        - Expense Category
+      consumes:
+        - application/json
+      security:
+        - api_token: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+        - name: expenseCategoryId
+          in: path
+          required: true
+          type: string
+      responses:
+        "200":
+          description: "Response after successfully deleting user wise a expense category"
+          schema:
+            $ref: "#/definitions/Success"
+
 ##############################################################################################################                                                                                                         #
 #                                     # Definitions #                                                                                                                                                                                                      #
 ##############################################################################################################
@@ -600,6 +732,67 @@ definitions:
       postalCode:
         type: string
         example: "5840"
+      isActive:
+        type: boolean
+        default: true
+
+  ExpenseCategoriesResponse:
+    type: object
+    description: "Expense Categories Response"
+    properties:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/ExpenseCategoriesObject"
+
+  ExpenseCategoriesObject:
+    type: object
+    description: "Expense Categories Object"
+    properties:
+      id:
+        type: string
+        example: "6393bcjbdknjdvn....."
+      categoryName:
+        type: string
+        example: "Rent"
+      categoryDescription:
+        type: string
+        example: "Description of expense category"
+      isActive:
+        type: boolean
+        default: true
+      createdAt:
+        type: string
+        format: date-time
+
+  AddUserExpenseCategoryObject:
+    type: object
+    description: "AddUser Expense Category Object"
+    required:
+      - categoryName
+      - categoryDescription
+    properties:
+      categoryName:
+        type: string
+        example: "Rent"
+      categoryDescription:
+        type: string
+        example: "Description of expense category"
+
+  UpdateExpenseCategoryObject:
+    type: object
+    description: "Update Expense Category Object"
+    required:
+      - categoryName
+      - categoryDescription
+      - isActive
+    properties:
+      categoryName:
+        type: string
+        example: "Rent"
+      categoryDescription:
+        type: string
+        example: "Description of expense category"
       isActive:
         type: boolean
         default: true

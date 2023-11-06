@@ -23,7 +23,7 @@ exports.userAddressesGet = async (req, res) => {
 
         const addresses = await userAddresses(userId)
 
-        const response = getUserAddressesResponse(addresses)
+        const response = await getUserAddressesResponse(addresses)
 
         responseFormatter(res, new SuccessResponse(200, 'User addresses found!', response))
     }catch (e) {
