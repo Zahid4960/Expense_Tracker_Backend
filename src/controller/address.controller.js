@@ -1,5 +1,5 @@
-const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../utility/response')
-const { responseFormatter } = require('../utility/response-formatter')
+const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../src/utility/response')
+const { responseFormatter } = require('../src/utility/response-formatter')
 const { getUserAddressesResponse } = require('../helper/address.helper')
 const { UserAddressDto, UpdateAddressDto } = require('../dto/address.dto')
 const {
@@ -8,7 +8,7 @@ const {
     addressByAddressId,
     updateAddress,
     addressDelete
-} = require('../service/address.service')
+} = require('../src/service/address.service')
 
 
 /**

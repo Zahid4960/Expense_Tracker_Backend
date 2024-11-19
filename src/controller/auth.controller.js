@@ -1,5 +1,5 @@
-const { responseFormatter } = require('../utility/response-formatter')
-const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../utility/response')
+const { responseFormatter } = require('../src/utility/response-formatter')
+const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../src/utility/response')
 const { getTokenFromHeader, getSuccessLoginResponse, getUserDetailsResponse } = require('../helper/auth.helper')
 const {
     RegistrationDto,
@@ -18,13 +18,13 @@ const {
     userProfileUpdate,
     userDetails,
     userDelete
-} = require('../service/auth.service')
+} = require('../src/service/auth.service')
 const {
     loginRegistrationValidationSchema,
     userVerifyOtpValidationSchema,
     forgotPasswordValidationSchema,
     changePasswordValidationSchema
-} = require('../validation/user.validation')
+} = require('../src/validation/user.validation')
 
 
 /**
