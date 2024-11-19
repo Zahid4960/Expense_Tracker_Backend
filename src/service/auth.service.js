@@ -1,5 +1,5 @@
 const { convertIsoDateTimeToUTCDateTime } = require("../helper/common.helper")
-const CustomException = require('../utility/custom-exception')
+const CustomException = require('../src/utility/custom-exception')
 const {
     isUserExistOrNotByEmail,
     createUser,

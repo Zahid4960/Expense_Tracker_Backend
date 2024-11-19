@@ -1,4 +1,4 @@
-const CustomException = require('../utility/custom-exception')
+const CustomException = require('../src/utility/custom-exception')
 const {
     getUserById,
     getUserByFilters,
