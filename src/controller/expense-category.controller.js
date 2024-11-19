@@ -1,7 +1,7 @@
 const { responseFormatter } = require('../utility/response-formatter')
 const { SuccessResponse, ErrorResponse, ExceptionResponse } = require('../utility/response')
 const { AddExpenseCategoryDto, UpdateExpenseCategoryDto } = require('../dto/expense-category.dto')
-const { formattedExpenseCategories } = require('../helper/expense-category.helper')
+const { formattedExpenseCategories } = require('../../helper/expense-category.helper')
 const {
     addExpenseCategoryValidationSchema,
     updateExpenseCategoryValidationSchema

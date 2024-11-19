@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const { verifyToken, verifyUserAccount } = require('../../middleware/auth.middleware')
-const authController = require('../../controller/auth.controller')
-const addressController = require('../../controller/address.controller')
-const expenseCategoryController = require('../../controller/expense-category.controller')
+const { verifyToken, verifyUserAccount } = require('../../src/middleware/auth.middleware')
+const authController = require('../../src/controller/auth.controller')
+const addressController = require('../../src/controller/address.controller')
+const expenseCategoryController = require('../../src/controller/expense-category.controller')
 
 
 const prefix = 'user'

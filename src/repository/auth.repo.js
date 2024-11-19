@@ -1,5 +1,5 @@
 const UserModel = require('../model/user.model')
-const { encryptPassword, generateOTP, generateToken, tokenExpiresAt } = require('../helper/auth.helper')
+const { encryptPassword, generateOTP, generateToken, tokenExpiresAt } = require('../../helper/auth.helper')
 const jwt = require("jsonwebtoken")
 
 
